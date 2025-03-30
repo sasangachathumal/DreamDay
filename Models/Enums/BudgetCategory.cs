@@ -1,0 +1,20 @@
+﻿public enum BudgetCategory
+{
+    Venue,
+    Catering,
+    Photography,
+    Videography,
+    Music,
+    Flowers,
+    Cake,
+    Invitations,
+    Transportation,
+    Rentals,
+    Attire,
+    HairAndMakeup,
+    Favors,
+    WeddingPlanner,
+    Officiant,
+    Gifts,
+    Miscellaneous
+}

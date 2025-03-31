@@ -17,5 +17,7 @@ namespace DreamDay.Models
 
         [ForeignKey("VendorId")]
         public required Vendor Vendor { get; set; }
+
+        public ICollection<AppImages>? AppImages { get; set; }
     }
 }

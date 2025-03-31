@@ -440,6 +440,35 @@ namespace DreamDay.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "AppImages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ImageURL = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    RelatedId = table.Column<int>(type: "int", nullable: false),
+                    ImageCategory = table.Column<int>(type: "int", nullable: false),
+                    VendorId = table.Column<int>(type: "int", nullable: true),
+                    VendorPackageId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppImages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppImages_VendorPackages_VendorPackageId",
+                        column: x => x.VendorPackageId,
+                        principalTable: "VendorPackages",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AppImages_Vendors_VendorId",
+                        column: x => x.VendorId,
+                        principalTable: "Vendors",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "VendorPackagesBooking",
                 columns: table => new
                 {
@@ -448,7 +477,7 @@ namespace DreamDay.Migrations
                     WeddingID = table.Column<int>(type: "int", nullable: false),
                     VendorPackageID = table.Column<int>(type: "int", nullable: false),
                     BookDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    isConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    IsConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -467,6 +496,16 @@ namespace DreamDay.Migrations
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppImages_VendorId",
+                table: "AppImages",
+                column: "VendorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppImages_VendorPackageId",
+                table: "AppImages",
+                column: "VendorPackageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -569,6 +608,9 @@ namespace DreamDay.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AppImages");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 

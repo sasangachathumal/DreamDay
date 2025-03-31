@@ -1,3 +1,5 @@
+using DreamDay.Business.Interface;
+using DreamDay.Business.Service;
 using DreamDay.Data;
 using DreamDay.Models;
 using Microsoft.AspNetCore.Identity;
@@ -14,6 +16,18 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddScoped<IAppImageService, AppImageService>();
+builder.Services.AddScoped<IBudgetService, BudgetService>();
+builder.Services.AddScoped<IChecklistItemService, ChecklistItemService>();
+builder.Services.AddScoped<IGuestService, GuestService>();
+builder.Services.AddScoped<ITimelineService, TimelineService>();
+builder.Services.AddScoped<IVendorCategoryService, VendorCategoryService>();
+builder.Services.AddScoped<IVendorPackageBookingService, VendorPackageBookingService>();
+builder.Services.AddScoped<IVendorPackageService, VendorPackageService>();
+builder.Services.AddScoped<IVendorReviewService, VendorReviewService>();
+builder.Services.AddScoped<IVendorService, VendorService>();
+builder.Services.AddScoped<IWeddingService, WeddingService>();
 
 builder.Services.AddControllersWithViews();
 

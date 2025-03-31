@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DreamDay.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250330161105_init")]
+    [Migration("20250331144328_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -24,6 +24,39 @@ namespace DreamDay.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+
+            modelBuilder.Entity("DreamDay.Models.AppImages", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ImageCategory")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageURL")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("RelatedId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("VendorId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("VendorPackageId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VendorId");
+
+                    b.HasIndex("VendorPackageId");
+
+                    b.ToTable("AppImages");
+                });
 
             modelBuilder.Entity("DreamDay.Models.ApplicationUser", b =>
                 {
@@ -319,14 +352,14 @@ namespace DreamDay.Migrations
                     b.Property<DateTime>("BookDate")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<bool>("IsConfirmed")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<int>("VendorPackageID")
                         .HasColumnType("int");
 
                     b.Property<int>("WeddingID")
                         .HasColumnType("int");
-
-                    b.Property<bool>("isConfirmed")
-                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 
@@ -540,6 +573,17 @@ namespace DreamDay.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("DreamDay.Models.AppImages", b =>
+                {
+                    b.HasOne("DreamDay.Models.Vendor", null)
+                        .WithMany("AppImages")
+                        .HasForeignKey("VendorId");
+
+                    b.HasOne("DreamDay.Models.VendorPackage", null)
+                        .WithMany("AppImages")
+                        .HasForeignKey("VendorPackageId");
+                });
+
             modelBuilder.Entity("DreamDay.Models.Budget", b =>
                 {
                     b.HasOne("DreamDay.Models.Wedding", "Wedding")
@@ -716,7 +760,14 @@ namespace DreamDay.Migrations
 
             modelBuilder.Entity("DreamDay.Models.Vendor", b =>
                 {
+                    b.Navigation("AppImages");
+
                     b.Navigation("VendorPackages");
+                });
+
+            modelBuilder.Entity("DreamDay.Models.VendorPackage", b =>
+                {
+                    b.Navigation("AppImages");
                 });
 
             modelBuilder.Entity("DreamDay.Models.Wedding", b =>

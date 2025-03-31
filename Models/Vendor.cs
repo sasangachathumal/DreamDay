@@ -24,5 +24,7 @@ namespace DreamDay.Models
         public required VendorCategory VendorCategory { get; set; }
         
         public ICollection<VendorPackage>? VendorPackages { get; set; }
+
+        public ICollection<AppImages>? AppImages { get; set; }
     }
 }

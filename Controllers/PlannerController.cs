@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DreamDay.Controllers
 {
-    [Authorize(Roles = "Client")]
-    public class ClientController : Controller
+    [Authorize(Roles = "Planner")]
+    public class PlannerController : Controller
     {
         public IActionResult Dashboard()
         {

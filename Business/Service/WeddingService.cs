@@ -1,6 +1,7 @@
 ﻿using DreamDay.Business.Interface;
 using DreamDay.Data;
 using DreamDay.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DreamDay.Business.Service
 {
@@ -13,7 +14,17 @@ namespace DreamDay.Business.Service
         }
         public Task<bool> AddWedding(Wedding wedding)
         {
-            throw new NotImplementedException();
+            _context.Add(wedding);
+            int result = _context.SaveChanges();
+
+            if (result > 0)
+            {
+                return Task.FromResult(true);
+            }
+            else
+            {
+                return Task.FromResult(false);
+            }
         }
 
         public Task<bool> DeleteWedding(int id)
@@ -26,9 +37,20 @@ namespace DreamDay.Business.Service
             throw new NotImplementedException();
         }
 
-        public Task<List<Wedding>> GetWeddingByClientId(int clientId)
+        public Task<List<Wedding>> GetWeddingByClientId(string clientId)
         {
-            throw new NotImplementedException();
+            if (clientId == null)
+            {
+                return Task.FromResult(new List<Wedding>());
+            }
+
+            var weddings = _context.Weddings
+                .Include(w => w.Client)
+                .Include(w => w.Planner)
+                .Where(m => m.ClientId == clientId)
+                .ToList();
+
+            return Task.FromResult(weddings);
         }
 
         public Task<Wedding> GetWeddingById(int id)
@@ -36,7 +58,7 @@ namespace DreamDay.Business.Service
             throw new NotImplementedException();
         }
 
-        public Task<List<Wedding>> GetWeddingByPlannerId(int plannerId)
+        public Task<List<Wedding>> GetWeddingByPlannerId(string plannerId)
         {
             throw new NotImplementedException();
         }

@@ -19,11 +19,11 @@ namespace DreamDay.Business.Service
 
             if (result > 0)
             {
-                return Task.FromResult(true);
+                return true;
             }
             else
             {
-                return Task.FromResult(false);
+                return false;
             }
         }
 
@@ -37,11 +37,11 @@ namespace DreamDay.Business.Service
             throw new NotImplementedException();
         }
 
-        public Task<List<Wedding>> GetWeddingByClientId(string clientId)
+        public List<Wedding> GetWeddingByClientId(string clientId)
         {
             if (clientId == null)
             {
-                return Task.FromResult(new List<Wedding>());
+                return new List<Wedding>();
             }
 
             var weddings = _context.Weddings
@@ -50,7 +50,7 @@ namespace DreamDay.Business.Service
                 .Where(m => m.ClientId == clientId)
                 .ToList();
 
-            return Task.FromResult(weddings);
+            return weddings;
         }
 
         public Wedding GetWeddingById(int id)
@@ -58,7 +58,7 @@ namespace DreamDay.Business.Service
             throw new NotImplementedException();
         }
 
-        public Task<List<Wedding>> GetWeddingByPlannerId(string plannerId)
+        public List<Wedding> GetWeddingByPlannerId(string plannerId)
         {
             throw new NotImplementedException();
         }

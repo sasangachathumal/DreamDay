@@ -27,7 +27,7 @@ namespace DreamDay.Controllers
         public IActionResult Dashboard()
         {
             var SignedInUser = _signInManager.UserManager.GetUserAsync(User).Result;
-            var weddings = _weddingService.GetWeddingByClientId(SignedInUser?.Id).Result;
+            var weddings = _weddingService.GetWeddingByClientId(SignedInUser?.Id);
 
             if (weddings == null)
             {

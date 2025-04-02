@@ -4,12 +4,12 @@ namespace DreamDay.Business.Interface
 {
     public interface IWeddingService
     {
-        Task<List<Wedding>> GetAllWeddings();
-        Task<List<Wedding>> GetWeddingByClientId(string clientId);
-        Task<List<Wedding>> GetWeddingByPlannerId(string plannerId);
-        Task<Wedding> GetWeddingById(int id);
-        Task<bool> AddWedding(Wedding wedding);
-        Task<bool> UpdateWedding(Wedding wedding);
-        Task<bool> DeleteWedding(int id);
+        List<Wedding> GetAllWeddings();
+        List<Wedding> GetWeddingByClientId(string clientId);
+        List<Wedding> GetWeddingByPlannerId(string plannerId);
+        Wedding GetWeddingById(int id);
+        bool AddWedding(Wedding wedding);
+        bool UpdateWedding(Wedding wedding);
+        bool DeleteWedding(int id);
     }
 }

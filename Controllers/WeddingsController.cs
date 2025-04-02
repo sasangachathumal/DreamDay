@@ -66,7 +66,7 @@ namespace DreamDay.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _weddingService.AddWedding(wedding);
+                var result = _weddingService.AddWedding(wedding);
                 if (result)
                 {
                     return RedirectToAction(nameof(Index));

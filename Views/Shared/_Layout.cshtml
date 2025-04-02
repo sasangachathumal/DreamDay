@@ -1,4 +1,27 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var user = await UserManager.GetUserAsync(User);
+    var roles = await UserManager.GetRolesAsync(user);
+
+    if (roles.Contains("Client"))
+    {
+        Context.Response.Redirect("/Client/Dashboard");
+    }
+    else if (roles.Contains("Admin"))
+    {
+        Context.Response.Redirect("/Admin/Dashboard");
+    }
+    else if (roles.Contains("Planner"))
+    {
+        Context.Response.Redirect("/Planner/Dashboard");
+    }
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />

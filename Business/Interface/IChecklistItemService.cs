@@ -11,6 +11,7 @@ namespace DreamDay.Business.Interface
         ChecklistItem GetChecklistItemByIdAsync(int id);
         bool AddChecklistItem(ChecklistItem checklistItem);
         bool UpdateChecklistItem(ChecklistItem checklistItem);
+        bool MarkAsDone(int id);
         bool DeleteChecklistItem(int id);
     }
 }

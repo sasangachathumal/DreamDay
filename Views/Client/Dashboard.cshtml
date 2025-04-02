@@ -7,7 +7,63 @@
 <div class="container-fluid">
     <h1>Dashboard</h1>
     <div class="row">
-        @if (Model.Count > 0)
+
+        @if (Model != null && Model.Count > 0 && Model[0]?.ChecklistItems != null)
+        {
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Wedding ToDo List</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Desciprion</th>
+                                    <th scope="col">Due At</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (ChecklistItem item in Model[0].ChecklistItems)
+                                {
+                                    @if (!item.IsDone) 
+                                    {
+                                        <tr>
+                                            <td>@item.Title</td>
+                                            <td>@item.Description</td>
+                                            <td>@item.DateTime.ToString("MM/dd/yyyy hh:mm:ss tt")</td>
+                                            <td>
+                                                <form method="post" asp-action="MarkAsDone" asp-controller="Client">
+                                                    <input type="hidden" name="itemId" value="@item.Id" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-success">Mark Done</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Weddings</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>View your weddings</p>
+                        <a asp-action="Index" asp-controller="Weddings" class="btn btn-primary">View</a>
+                    </div>
+                </div>
+            </div>
+        }
+        </div>
+    <div class="row">
+
+        @if (Model.Count == 0)
         {
             <div class="col-md-4">
                 <div class="card">
@@ -17,6 +73,18 @@
                     <div class="card-body">
                         <p>View your weddings</p>
                         <a asp-action="Index" asp-controller="Weddings" class="btn btn-primary">View</a>
+                    </div>
+                </div>
+            </div>
+        }
+        else {
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Weddings</h3>
+                    </div>
+                    <div class="card-body">
+                        
                     </div>
                 </div>
             </div>

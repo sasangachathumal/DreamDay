@@ -66,6 +66,7 @@ namespace DreamDay.Business.Service
         public Task<bool> UpdateWedding(Wedding wedding)
         {
             throw new NotImplementedException();
+            
         }
     }
 }

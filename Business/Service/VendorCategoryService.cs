@@ -11,27 +11,27 @@ namespace DreamDay.Business.Service
         {
             _context = dbContext;
         }
-        public Task<bool> AddVendorCategory(VendorCategory vendorCategory)
+        public bool AddVendorCategory(VendorCategory vendorCategory)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteVendorCategory(int id)
+        public bool DeleteVendorCategory(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<VendorCategory>> GetAllVendorCategories()
+        public List<VendorCategory> GetAllVendorCategories()
         {
             throw new NotImplementedException();
         }
 
-        public Task<VendorCategory> GetVendorCategoryById(int id)
+        public VendorCategory GetVendorCategoryById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateVendorCategory(VendorCategory vendorCategory)
+        public bool UpdateVendorCategory(VendorCategory vendorCategory)
         {
             throw new NotImplementedException();
         }

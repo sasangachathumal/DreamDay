@@ -4,12 +4,12 @@ namespace DreamDay.Business.Interface
 {
     public interface IBudgetService
     {
-        Task<List<Budget>> GetAllBudgets();
-        Task<List<Budget>> GetBudgetsByWeddingId(int weddingId);
-        Task<List<Budget>> GetBudgetsByCategory(BudgetCategory budgetCategory);
-        Task<Budget> GetBudgetByIdAsync(int id);
-        Task<bool> AddBudget(Budget budget);
-        Task<bool> UpdateBudget(Budget budget);
-        Task<bool> DeleteBudget(int id);
+        List<Budget> GetAllBudgets();
+        List<Budget> GetBudgetsByWeddingId(int weddingId);
+        List<Budget> GetBudgetsByCategory(BudgetCategory budgetCategory);
+        Budget GetBudgetByIdAsync(int id);
+        bool AddBudget(Budget budget);
+        bool UpdateBudget(Budget budget);
+        bool DeleteBudget(int id);
     }
 }

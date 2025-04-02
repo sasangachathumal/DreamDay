@@ -11,32 +11,32 @@ namespace DreamDay.Business.Service
         {
             _context = dbContext;
         }
-        public Task<bool> AddVendorPackage(VendorPackage vendorPackage)
+        public bool AddVendorPackage(VendorPackage vendorPackage)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteVendorPackage(int id)
+        public bool DeleteVendorPackage(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<VendorPackage>> GetAllVendorPackages()
+        public List<VendorPackage> GetAllVendorPackages()
         {
             throw new NotImplementedException();
         }
 
-        public Task<VendorPackage> GetVendorPackageById(int id)
+        public VendorPackage GetVendorPackageById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<VendorPackage>> GetVendorPackagesByVendorId(int vendorId)
+        public List<VendorPackage> GetVendorPackagesByVendorId(int vendorId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateVendorPackage(VendorPackage vendorPackage)
+        public bool UpdateVendorPackage(VendorPackage vendorPackage)
         {
             throw new NotImplementedException();
         }

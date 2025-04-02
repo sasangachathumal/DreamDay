@@ -4,11 +4,11 @@ namespace DreamDay.Business.Interface
 {
     public interface IAppImageService
     {
-        Task<List<AppImages>> GetAllAppImages();
-        Task<List<AppImages>> GetAppImagesByRelatedId(int RelatedId, ImageRelateType relateType);
-        Task<AppImages> GetAppImageByIdAsync(int id);
-        Task<bool> AddAppImage(AppImages appImage);
-        Task<bool> UpdateAppImage(AppImages appImage);
-        Task<bool> DeleteAppImage(int id);
+        List<AppImages> GetAllAppImages();
+        List<AppImages> GetAppImagesByRelatedId(int RelatedId, ImageRelateType relateType);
+        AppImages GetAppImageByIdAsync(int id);
+        bool AddAppImage(AppImages appImage);
+        bool UpdateAppImage(AppImages appImage);
+        bool DeleteAppImage(int id);
     }
 }

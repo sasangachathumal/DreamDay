@@ -11,32 +11,32 @@ namespace DreamDay.Business.Service
         {
             _context = dbContext;
         }
-        public Task<bool> AddAppImage(AppImages appImage)
+        public bool AddAppImage(AppImages appImage)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteAppImage(int id)
+        public bool DeleteAppImage(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<AppImages>> GetAllAppImages()
+        public List<AppImages> GetAllAppImages()
         {
             throw new NotImplementedException();
         }
 
-        public Task<AppImages> GetAppImageByIdAsync(int id)
+        public AppImages GetAppImageByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<AppImages>> GetAppImagesByRelatedId(int RelatedId, ImageRelateType relateType)
+        public List<AppImages> GetAppImagesByRelatedId(int RelatedId, ImageRelateType relateType)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateAppImage(AppImages appImage)
+        public bool UpdateAppImage(AppImages appImage)
         {
             throw new NotImplementedException();
         }

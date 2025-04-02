@@ -11,37 +11,37 @@ namespace DreamDay.Business.Service
         {
             _context = dbContext;
         }
-        public Task<bool> AddWedding(Wedding wedding)
+        public bool AddWedding(Wedding wedding)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteWedding(int id)
+        public bool DeleteWedding(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<Wedding>> GetAllWeddings()
+        public List<Wedding> GetAllWeddings()
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<Wedding>> GetWeddingByClientId(int clientId)
+        public List<Wedding> GetWeddingByClientId(int clientId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Wedding> GetWeddingById(int id)
+        public Wedding GetWeddingById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<Wedding>> GetWeddingByPlannerId(int plannerId)
+        public List<Wedding> GetWeddingByPlannerId(int plannerId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateWedding(Wedding wedding)
+        public bool UpdateWedding(Wedding wedding)
         {
             throw new NotImplementedException();
         }

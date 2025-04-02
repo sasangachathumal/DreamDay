@@ -11,37 +11,37 @@ namespace DreamDay.Business.Service
         {
             _context = dbContext;
         }
-        public Task<bool> AddBudget(Budget budget)
+        public bool AddBudget(Budget budget)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteBudget(int id)
+        public bool DeleteBudget(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<Budget>> GetAllBudgets()
+        public List<Budget> GetAllBudgets()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Budget> GetBudgetByIdAsync(int id)
+        public Budget GetBudgetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<Budget>> GetBudgetsByCategory(BudgetCategory budgetCategory)
+        public List<Budget> GetBudgetsByCategory(BudgetCategory budgetCategory)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<Budget>> GetBudgetsByWeddingId(int weddingId)
+        public List<Budget> GetBudgetsByWeddingId(int weddingId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateBudget(Budget budget)
+        public bool UpdateBudget(Budget budget)
         {
             throw new NotImplementedException();
         }

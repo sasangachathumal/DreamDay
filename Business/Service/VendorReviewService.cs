@@ -11,37 +11,37 @@ namespace DreamDay.Business.Service
         {
             _context = dbContext;
         }
-        public Task<bool> AddVendorReview(VendorReviews vendorReview)
+        public bool AddVendorReview(VendorReviews vendorReview)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteVendorReview(int id)
+        public bool DeleteVendorReview(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<VendorReviews>> GetAllVendorReviews()
+        public List<VendorReviews> GetAllVendorReviews()
         {
             throw new NotImplementedException();
         }
 
-        public Task<VendorReviews> GetVendorReviewById(int id)
+        public VendorReviews GetVendorReviewById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<VendorReviews>> GetVendorReviewsByUserId(int userId)
+        public List<VendorReviews> GetVendorReviewsByUserId(int userId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<VendorReviews>> GetVendorReviewsByVendorId(int vendorId)
+        public List<VendorReviews> GetVendorReviewsByVendorId(int vendorId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateVendorReview(VendorReviews vendorReview)
+        public bool UpdateVendorReview(VendorReviews vendorReview)
         {
             throw new NotImplementedException();
         }

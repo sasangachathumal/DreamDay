@@ -19,5 +19,6 @@ namespace DreamDay.Models
         public required Vendor Vendor { get; set; }
 
         public ICollection<AppImages>? AppImages { get; set; }
+        public ICollection<VendorPackageBooking>? VendorPackageBookings { get; set; }
     }
 }

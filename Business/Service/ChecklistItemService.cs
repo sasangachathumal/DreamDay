@@ -14,7 +14,23 @@ namespace DreamDay.Business.Service
         }
         public bool AddChecklistItem(ChecklistItem checklistItem)
         {
-            throw new NotImplementedException();
+            if (checklistItem == null)
+            {
+                return false;
+            }
+            try
+            {
+                _context.ChecklistItems.Add(checklistItem);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (important for debugging)
+                Console.WriteLine($"Error adding checklist item: {ex.Message}");
+                // Optionally return false or a specific error code/message
+                return false;
+            }
         }
 
         public bool DeleteChecklistItem(int id)
@@ -27,9 +43,30 @@ namespace DreamDay.Business.Service
             throw new NotImplementedException();
         }
 
-        public ChecklistItem GetChecklistItemByIdAsync(int id)
+        public ChecklistItem GetChecklistItemById(int id)
         {
-            throw new NotImplementedException();
+            if (id == 0)
+            {
+                return null;
+            }
+            try
+            {
+                var checklistItem = _context.ChecklistItems
+                .Include(c => c.Wedding)
+                .FirstOrDefault(m => m.Id == id);
+                if (checklistItem == null)
+                {
+                    return null;
+                }
+                return checklistItem;
+            }
+            catch (Exception ex) 
+            {
+                // Log the exception (important for debugging)
+                Console.WriteLine($"Error marking checklist item as done (ID: {id}): {ex.Message}");
+                // Optionally return false or a specific error code/message
+                return null;
+            }
         }
 
         public List<ChecklistItem> GetChecklistItemsByWeddingId(int weddingId)
@@ -39,11 +76,21 @@ namespace DreamDay.Business.Service
                 return new List<ChecklistItem>();
             }
 
-            var weddingChecklistItems = _context.ChecklistItems
+            try
+            {
+                var weddingChecklistItems = _context.ChecklistItems
                 .Where(m => m.WeddingId == weddingId)
                 .ToList();
 
-            return weddingChecklistItems;
+                return weddingChecklistItems;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (important for debugging)
+                Console.WriteLine($"Error retrieving checklist items for wedding (ID: {weddingId}): {ex.Message}");
+                // Optionally return an empty list or a specific error code/message
+                return new List<ChecklistItem>();
+            }
         }
 
         public List<ChecklistItem> GetChecklistItemsOfWeddingByDate(int weddingId, DateTime date)

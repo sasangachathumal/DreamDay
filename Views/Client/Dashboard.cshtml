@@ -16,7 +16,7 @@
                             <h3>Wedding ToDo List</h3>
                         </div>
                         <div class="col-md-8 d-flex justify-content-end">
-                            <a asp-action="Create" asp-controller="CheckList" class="btn btn-primary">New Checklist Item</a>
+                            <a asp-action="Create" asp-controller="ChecklistItems" class="btn btn-primary">New Checklist Item</a>
                         </div>
                     </div>
                 </div>
@@ -127,7 +127,7 @@
                                         <h5 class="mt-1">Manage Wedding Checklist</h5>
                                     </div>
                                     <div class="col-md-6">
-                                        <a asp-action="SelectPlanner" asp-controller="Weddings" class="btn btn-primary">✅ Checklist</a>
+                                        <a asp-action="Index" asp-controller="ChecklistItems" asp-route-weddingId="@Model[0].Id" class="btn btn-primary">✅ Checklist</a>
                                     </div>
                                 </div>
                             </li>
@@ -139,7 +139,7 @@
                                         <h5 class="mt-1">Manage Wedding Guest List</h5>
                                     </div>
                                     <div class="col-md-6">
-                                        <a asp-action="SelectPlanner" asp-controller="Weddings" class="btn btn-primary">👨‍👩‍👧‍👦 Guest List </a>
+                                        <a asp-action="Index" asp-controller="Guests" class="btn btn-primary">👨‍👩‍👧‍👦 Guest List </a>
                                     </div>
                                 </div>
                             </li>
@@ -151,7 +151,7 @@
                                         <h5 class="mt-1">Manage Wedding Timeline</h5>
                                     </div>
                                     <div class="col-md-6">
-                                        <a asp-action="SelectPlanner" asp-controller="Weddings" class="btn btn-primary">⏰ Timeline</a>
+                                        <a asp-action="Index" asp-controller="Timelines" class="btn btn-primary">⏰ Timeline</a>
                                     </div>
                                 </div>
                             </li>
@@ -163,7 +163,7 @@
                                         <h5 class="mt-1">Manage Wedding Budget Allocations</h5>
                                     </div>
                                     <div class="col-md-6">
-                                        <a asp-action="SelectPlanner" asp-controller="Weddings" class="btn btn-primary">🪙 Budget</a>
+                                        <a asp-action="Index" asp-controller="Budgets" class="btn btn-primary">🪙 Budget</a>
                                     </div>
                                 </div>
                             </li>
@@ -175,7 +175,7 @@
                                         <h5 class="mt-1">Manage Wedding Vendors</h5>
                                     </div>
                                     <div class="col-md-6">
-                                        <a asp-action="SelectPlanner" asp-controller="Weddings" class="btn btn-primary">🏯 Vendors</a>
+                                        <a asp-action="Index" asp-controller="VendorBookings" class="btn btn-primary">🏯 Vendors</a>
                                     </div>
                                 </div>
                             </li>

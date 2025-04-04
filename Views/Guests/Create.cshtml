@@ -1,0 +1,43 @@
+﻿@model DreamDay.Models.Guest
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+<div class="container-fluid">
+    <h1>Add A New Guest</h1>
+    <hr />
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="FullName" class="control-label">Full Name</label>
+                    <input asp-for="FullName" class="form-control" />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Phone" class="control-label"></label>
+                    <input asp-for="Phone" class="form-control" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MealPreference" class="control-label">Meal Preference</label>
+                    <select asp-for="MealPreference" class="form-control" asp-items="Html.GetEnumSelectList<MealPreference>()"></select>
+                    <span asp-validation-for="MealPreference" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TableNumber" class="control-label">Table Number</label>
+                    <input asp-for="TableNumber" class="form-control" />
+                    <span asp-validation-for="TableNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-4 d-grid">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+            <div class="mt-5 d-grid">
+                <a class="btn btn-outline-secondary" asp-action="Index">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>

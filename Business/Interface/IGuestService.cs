@@ -9,9 +9,10 @@ namespace DreamDay.Business.Interface
         List<Guest> GetGuestsOfWeddingByRSVP(int weddingId, bool RSVP);
         List<Guest> GetGuestsOfWeddingByMealPreference(int weddingId, MealPreference mealPreference);
         List<Guest> GetGuestsOfWeddingByTableNumber(int weddingId, int tableNumber);
-        Guest GetGuestByIdAsync(int id);
+        Guest GetGuestById(int id);
         bool AddGuest(Guest guest);
         bool UpdateGuest(Guest guest);
         bool DeleteGuest(int id);
+        bool MarkAsAttending(int id);
     }
 }

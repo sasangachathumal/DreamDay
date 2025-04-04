@@ -89,7 +89,7 @@ namespace DreamDay.Business.Service
             catch (Exception ex) 
             {
                 // Log the exception (important for debugging)
-                Console.WriteLine($"Error marking checklist item as done (ID: {id}): {ex.Message}");
+                Console.WriteLine($"Error on getting checklist item: {ex.Message}");
                 // Optionally return false or a specific error code/message
                 return null;
             }

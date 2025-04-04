@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using DreamDay.Data;
 using DreamDay.Models;
 using DreamDay.Business.Service;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DreamDay.Controllers
 {
+    [Authorize(Roles = "Client, Planner, Admin")]
     public class WeddingsController : Controller
     {
         private readonly ApplicationDbContext _context;

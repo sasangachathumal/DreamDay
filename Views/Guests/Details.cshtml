@@ -1,0 +1,78 @@
+﻿@model DreamDay.Models.Guest
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+<div class="container-fluid">
+    <h1>Guest Details</h1>
+    <hr/>
+
+    <div class="row d-flex justify-content-center">
+        <div class="col-6">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h5 class="mb-1">Full Name</h5>
+                        </div>
+                        <div class="col-md-9">
+                            <p class="mb-1">@Model.FullName</p>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h5 class="mb-1">Phone Number</h5>
+                        </div>
+                        <div class="col-md-9">
+                            <p class="mb-1">@Model.Phone</p>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h5 class="mb-1">Status</h5>
+                        </div>
+                        <div class="col-md-9">
+                            @if (Model.RSVP)
+                            {
+                                <span class="badge rounded-pill text-bg-success p-2">Attending</span>
+                            }
+                            else
+                            {
+                                <span class="badge rounded-pill text-bg-warning p-2">Not Attending</span>
+                            }
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h5 class="mb-1">Meal Preference</h5>
+                        </div>
+                        <div class="col-md-9">
+                            <p class="mb-1">@Model.MealPreference</p>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h5 class="mb-1">Table Number</h5>
+                        </div>
+                        <div class="col-md-9">
+                            <p class="mb-1">@Model.TableNumber</p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="mt-5 d-flex justify-content-between">
+                <a class="btn btn-outline-info" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
+                <a class="btn btn-outline-secondary" asp-action="Index">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>

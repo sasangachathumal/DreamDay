@@ -20,3 +20,8 @@
     font-weight: bold;
     background-color: #3a3a3b;
 }
+
+.table-card {
+    max-height: 30vh;
+    height: 30vh;
+}

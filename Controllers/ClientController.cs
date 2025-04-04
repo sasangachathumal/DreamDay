@@ -13,16 +13,19 @@ namespace DreamDay.Controllers
     {
         private readonly IWeddingService _weddingService;
         private readonly IChecklistItemService _checklistItemService;
+        private readonly IGuestService _guestService;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
         public ClientController(
             IWeddingService weddingService, 
             SignInManager<ApplicationUser> signInManager,
-            IChecklistItemService checklistItemService)
+            IChecklistItemService checklistItemService,
+            IGuestService guestService)
         {
             _signInManager = signInManager;
             _weddingService = weddingService;
             _checklistItemService = checklistItemService;
+            _guestService = guestService;
         }
         public IActionResult Dashboard()
         {
@@ -39,6 +42,7 @@ namespace DreamDay.Controllers
                 foreach (var wedding in weddings)
                 {
                     wedding.ChecklistItems = _checklistItemService.GetChecklistItemsByWeddingId(wedding.Id);
+                    wedding.Guests = _guestService.GetGuestsByWeddingId(wedding.Id);
                 }
             }
 
@@ -48,6 +52,15 @@ namespace DreamDay.Controllers
         public IActionResult MarkAsDone(int itemId)
         {
             if (_checklistItemService.MarkAsDone(itemId))
+            {
+                return RedirectToAction("Dashboard");
+            }
+            return View();
+        }
+
+        public IActionResult MarkAsAttending(int itemId)
+        {
+            if (_guestService.MarkAsAttending(itemId))
             {
                 return RedirectToAction("Dashboard");
             }

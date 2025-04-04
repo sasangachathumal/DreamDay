@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DreamDay.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250331144328_init")]
-    partial class init
+    [Migration("20250404073012_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

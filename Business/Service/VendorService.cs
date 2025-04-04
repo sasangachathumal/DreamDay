@@ -1,6 +1,7 @@
 ﻿using DreamDay.Business.Interface;
 using DreamDay.Data;
 using DreamDay.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DreamDay.Business.Service
 {
@@ -13,8 +14,31 @@ namespace DreamDay.Business.Service
         }
         public bool AddVendor(Vendor vendor)
         {
-            throw new NotImplementedException();
+            try
+            {
+                // Ensure the VendorCategoryId exists before saving
+                var category = _context.VendorCategories.Find(vendor.VendorCategoryId);
+                if (category == null)
+                {
+                    throw new Exception("Vendor category not found. Cannot add vendor.");
+                }
+
+                vendor.VendorCategory = category; // ✅ Manually assign the category
+
+                _context.Vendors.Add(vendor);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                return false;
+            }
         }
+
+
+
+
 
         public bool DeleteVendor(int id)
         {
@@ -23,7 +47,7 @@ namespace DreamDay.Business.Service
 
         public List<Vendor> GetAllVendors()
         {
-            throw new NotImplementedException();
+            return _context.Vendors.Include(v => v.VendorCategory).ToList();
         }
 
         public Vendor GetVendorByIdAsync(int id)

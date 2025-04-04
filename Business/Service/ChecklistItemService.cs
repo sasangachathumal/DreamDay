@@ -35,7 +35,33 @@ namespace DreamDay.Business.Service
 
         public bool DeleteChecklistItem(int id)
         {
-            throw new NotImplementedException();
+            if (id == 0)
+            {
+                return false;
+            }
+            try
+            {
+                var checklistItem = _context.ChecklistItems
+                .Include(c => c.Wedding)
+                .FirstOrDefault(m => m.Id == id);
+                if (checklistItem == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    _context.ChecklistItems.Remove(checklistItem);
+                    _context.SaveChanges();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (important for debugging)
+                Console.WriteLine($"Error deleting checklist item (ID: {id}): {ex.Message}");
+                // Optionally return false or a specific error code/message
+                return false;
+            }
         }
 
         public List<ChecklistItem> GetAllChecklistItems()
@@ -132,7 +158,23 @@ namespace DreamDay.Business.Service
 
         public bool UpdateChecklistItem(ChecklistItem checklistItem)
         {
-            throw new NotImplementedException();
+            if (checklistItem == null)
+            {
+                return false;
+            }
+            try
+            {
+                _context.Update(checklistItem);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (important for debugging)
+                Console.WriteLine($"Error updating checklist item: {ex.Message}");
+                // Optionally return false or a specific error code/message
+                return false;
+            }
         }
     }
 }

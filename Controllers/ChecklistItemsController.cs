@@ -13,13 +13,11 @@ namespace DreamDay.Controllers
 {
     public class ChecklistItemsController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly IChecklistItemService _checklistItemService;
 
-        public ChecklistItemsController(ApplicationDbContext context, IChecklistItemService checklistItemService)
+        public ChecklistItemsController(IChecklistItemService checklistItemService)
         {
             _checklistItemService = checklistItemService;
-            _context = context;
         }
 
         // GET: ChecklistItems
@@ -102,19 +100,18 @@ namespace DreamDay.Controllers
         }
 
         // GET: ChecklistItems/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
+            if (id == 0)
             {
                 return NotFound();
             }
 
-            var checklistItem = await _context.ChecklistItems.FindAsync(id);
+            var checklistItem = _checklistItemService.GetChecklistItemById(id);
             if (checklistItem == null)
             {
                 return NotFound();
             }
-            ViewData["WeddingId"] = new SelectList(_context.Weddings, "Id", "ClientId", checklistItem.WeddingId);
             return View(checklistItem);
         }
 
@@ -132,39 +129,21 @@ namespace DreamDay.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(checklistItem);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ChecklistItemExists(checklistItem.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _checklistItemService.UpdateChecklistItem(checklistItem);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["WeddingId"] = new SelectList(_context.Weddings, "Id", "ClientId", checklistItem.WeddingId);
             return View(checklistItem);
         }
 
         // GET: ChecklistItems/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id == null)
+            if (id == 0)
             {
                 return NotFound();
             }
 
-            var checklistItem = await _context.ChecklistItems
-                .Include(c => c.Wedding)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var checklistItem = _checklistItemService.GetChecklistItemById(id);
             if (checklistItem == null)
             {
                 return NotFound();
@@ -178,19 +157,8 @@ namespace DreamDay.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var checklistItem = await _context.ChecklistItems.FindAsync(id);
-            if (checklistItem != null)
-            {
-                _context.ChecklistItems.Remove(checklistItem);
-            }
-
-            await _context.SaveChangesAsync();
+            _checklistItemService.DeleteChecklistItem(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool ChecklistItemExists(int id)
-        {
-            return _context.ChecklistItems.Any(e => e.Id == id);
         }
     }
 }

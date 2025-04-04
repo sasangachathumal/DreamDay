@@ -13,32 +13,14 @@ namespace DreamDay.Business.Service
         }
         public bool AddVendorPackage(VendorPackage vendorPackage)
         {
-            throw new NotImplementedException();
-        }
-
-        public bool DeleteVendorPackage(int id)
-        {
-            throw new NotImplementedException();
+            _context.VendorPackages.Add(vendorPackage);
+            return _context.SaveChanges() > 0;
         }
 
         public List<VendorPackage> GetAllVendorPackages()
         {
-            throw new NotImplementedException();
+            return _context.VendorPackages.ToList();
         }
 
-        public VendorPackage GetVendorPackageById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<VendorPackage> GetVendorPackagesByVendorId(int vendorId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool UpdateVendorPackage(VendorPackage vendorPackage)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

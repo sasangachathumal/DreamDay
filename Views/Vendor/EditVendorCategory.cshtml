@@ -1,0 +1,22 @@
+﻿@model DreamDay.Models.VendorCategory
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Edit Vendor Category";
+}
+
+<div class="container mt-4">
+    <h2>Edit Vendor Category</h2>
+
+    <form method="post" asp-action="EditVendorCategory">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label class="form-label">Category Name</label>
+            <input type="text" class="form-control" asp-for="Name" required />
+        </div>
+
+        <button type="submit" class="btn btn-success">Update</button>
+        <a href="@Url.Action("VendorCategoryList", "Vendor")" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

@@ -1,0 +1,41 @@
+﻿@model List<DreamDay.Models.VendorCategory>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Vendor Category List";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-3">Vendor Categories</h2>
+
+    <div class="d-flex justify-content-between mb-3">
+        <h4>Category List</h4>
+        <a href="@Url.Action("VendorCategory", "Vendor")" class="btn btn-primary">+ Add New Vendor</a>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Category ID</th>
+                <th>Category Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in Model)
+            {
+                <tr>
+                    <td>@category.Id</td>
+                    <td>@category.Name</td>
+                    <td>
+                        <a href="@Url.Action("EditVendorCategory", "Vendor", new { id = category.Id })" class="btn btn-warning btn-sm">Edit</a>
+                        <form method="post" action="@Url.Action("DeleteVendorCategory", "Vendor")" style="display:inline;">
+                            <input type="hidden" name="id" value="@category.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

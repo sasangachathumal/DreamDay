@@ -7,23 +7,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DreamDay.Data;
 using DreamDay.Models;
-using DreamDay.Business.Interface;
 using Microsoft.AspNetCore.Authorization;
-using System.Data;
+using DreamDay.Business.Interface;
+using DreamDay.Business.Service;
 
 namespace DreamDay.Controllers
 {
-    [Authorize(Roles = "Client, Planner")]
-    public class ChecklistItemsController : Controller
+    [Authorize(Roles = "Client")]
+    public class GuestsController : Controller
     {
-        private readonly IChecklistItemService _checklistItemService;
+        private readonly IGuestService _guestService;
 
-        public ChecklistItemsController(IChecklistItemService checklistItemService)
+        public GuestsController(IGuestService guestService)
         {
-            _checklistItemService = checklistItemService;
+            _guestService = guestService;
         }
 
-        // GET: ChecklistItems
+        // GET: Guests
         public async Task<IActionResult> Index(int weddingId)
         {
             int _WeddingId = 0;
@@ -44,11 +44,11 @@ namespace DreamDay.Controllers
                 _WeddingId = weddingId;
                 HttpContext.Session.SetInt32("WeddingId", weddingId);
             }
-            var checklistItems = _checklistItemService.GetChecklistItemsByWeddingId(_WeddingId);
-            return View(checklistItems);
+            var guests = _guestService.GetGuestsByWeddingId(_WeddingId);
+            return View(guests);
         }
 
-        // GET: ChecklistItems/Details/5
+        // GET: Guests/Details/5
         public async Task<IActionResult> Details(int id)
         {
             if (id == 0)
@@ -56,27 +56,27 @@ namespace DreamDay.Controllers
                 return NotFound();
             }
 
-            var checklistItem = _checklistItemService.GetChecklistItemById(id);
-            if (checklistItem == null)
+            var guest = _guestService.GetGuestById(id);
+            if (guest == null)
             {
                 return NotFound();
             }
 
-            return View(checklistItem);
+            return View(guest);
         }
 
-        // GET: ChecklistItems/Create
+        // GET: Guests/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: ChecklistItems/Create
+        // POST: Guests/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,DateTime")] ChecklistItem checklistItem)
+        public async Task<IActionResult> Create([Bind("Id,FullName,Phone,MealPreference,TableNumber")] Guest guest)
         {
             ModelState.Remove("Wedding");
             if (ModelState.IsValid)
@@ -84,9 +84,9 @@ namespace DreamDay.Controllers
                 int? weddingId = HttpContext.Session.GetInt32("WeddingId");
                 if (weddingId.HasValue)
                 {
-                    checklistItem.WeddingId = weddingId.Value; // Set the WeddingId from session
-                    checklistItem.IsDone = false; // Default value for IsDone
-                    _checklistItemService.AddChecklistItem(checklistItem);
+                    guest.WeddingId = weddingId.Value; // Set the WeddingId from session
+                    guest.RSVP = false; // Default value for RSVP
+                    _guestService.AddGuest(guest);
                     return RedirectToAction(nameof(Index), new { weddingId = weddingId });
                 }
                 else
@@ -96,12 +96,12 @@ namespace DreamDay.Controllers
             }
             else
             {
-                return View(checklistItem);
+                return View(guest);
             }
-            return View(checklistItem);
+            return View(guest);
         }
 
-        // GET: ChecklistItems/Edit/5
+        // GET: Guests/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             if (id == 0)
@@ -109,22 +109,22 @@ namespace DreamDay.Controllers
                 return NotFound();
             }
 
-            var checklistItem = _checklistItemService.GetChecklistItemById(id);
-            if (checklistItem == null)
+            var guest = _guestService.GetGuestById(id);
+            if (guest == null)
             {
                 return NotFound();
             }
-            return View(checklistItem);
+            return View(guest);
         }
 
-        // POST: ChecklistItems/Edit/5
+        // POST: Guests/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,DateTime,IsDone")] ChecklistItem checklistItem)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,FullName,Phone,RSVP,MealPreference,TableNumber")] Guest guest)
         {
-            if (id != checklistItem.Id)
+            if (id != guest.Id)
             {
                 return NotFound();
             }
@@ -134,24 +134,23 @@ namespace DreamDay.Controllers
                 int? weddingId = HttpContext.Session.GetInt32("WeddingId");
                 if (weddingId.HasValue)
                 {
-                    checklistItem.WeddingId = weddingId.Value; // Set the WeddingId from session
-                    _checklistItemService.UpdateChecklistItem(checklistItem);
+                    guest.WeddingId = weddingId.Value; // Set the WeddingId from session
+                    _guestService.UpdateGuest(guest);
                     return RedirectToAction(nameof(Index), new { weddingId = weddingId });
                 }
                 else
                 {
                     ModelState.AddModelError("", "Wedding ID is not set in session.");
                 }
-
             }
             else
             {
-                return View(checklistItem);
+                return View(guest);
             }
-            return View(checklistItem);
+            return View(guest);
         }
 
-        // GET: ChecklistItems/Delete/5
+        // GET: Guests/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             if (id == 0)
@@ -159,21 +158,21 @@ namespace DreamDay.Controllers
                 return NotFound();
             }
 
-            var checklistItem = _checklistItemService.GetChecklistItemById(id);
-            if (checklistItem == null)
+            var guest = _guestService.GetGuestById(id);
+            if (guest == null)
             {
                 return NotFound();
             }
 
-            return View(checklistItem);
+            return View(guest);
         }
 
-        // POST: ChecklistItems/Delete/5
+        // POST: Guests/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _checklistItemService.DeleteChecklistItem(id);
+            _guestService.DeleteGuest(id);
             return RedirectToAction(nameof(Index));
         }
     }

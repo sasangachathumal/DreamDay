@@ -1,0 +1,52 @@
+﻿@model DreamDay.Models.Budget
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+<div class="container-fluid">
+    <h1>Guest Details</h1>
+    <hr />
+
+    <div class="row d-flex justify-content-center">
+        <div class="col-6">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5 class="mb-1">Category</h5>
+                        </div>
+                        <div class="col-md-8">
+                            <p class="mb-1">@Model.Category</p>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5 class="mb-1">Allocated Amount</h5>
+                        </div>
+                        <div class="col-md-8">
+                            <p class="mb-1">@Model.AllocatedAmount</p>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5 class="mb-1">Spend Amount</h5>
+                        </div>
+                        <div class="col-md-8">
+                            <p class="mb-1">@Model.SpendAmount</p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="mt-5 d-flex justify-content-between">
+                <a class="btn btn-outline-info" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
+                <a class="btn btn-outline-secondary" asp-action="Index">Back to List</a>
+            </div>
+        </div>
+    </div>
+
+</div>

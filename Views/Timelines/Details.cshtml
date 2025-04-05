@@ -1,0 +1,102 @@
+﻿@model DreamDay.Models.Timeline
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+<div class="container-fluid">
+    <h1>Timeline Details</h1>
+    <hr />
+
+    <div class="row d-flex justify-content-center">
+        <div class="col-6">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h5 class="mb-1">Title</h5>
+                        </div>
+                        <div class="col-md-9">
+                            <p class="mb-1">@Model.Title</p>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h5 class="mb-1">Description</h5>
+                        </div>
+                        <div class="col-md-9">
+                            @if (@Model.Description == null)
+                            {
+                                <p class="mb-1">~ not provided ~</p>
+                            }
+                            else
+                            {
+                                <p class="mb-1">@Model.Description</p>
+                            }
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h5 class="mb-1">Location</h5>
+                        </div>
+                        <div class="col-md-9">
+                            @if (@Model.Location == null)
+                            {
+                                <p class="mb-1">~ not provided ~</p>
+                            }
+                            else
+                            {
+                                <p class="mb-1">@Model.Location</p>
+                            }
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h5 class="mb-1">Start Date</h5>
+                        </div>
+                        <div class="col-md-9">
+                            <p class="mb-1">@Model.StartTime</p>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h5 class="mb-1">End Date</h5>
+                        </div>
+                        <div class="col-md-9">
+                            <p class="mb-1">@Model.EndTime</p>
+                        </div>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h5 class="mb-1">Status</h5>
+                        </div>
+                        <div class="col-md-9">
+                            @if (@Model.IsDone)
+                            {
+                                <span class="badge rounded-pill text-bg-success p-2">Completed</span>
+                            }
+                            else
+                            {
+                                <span class="badge rounded-pill text-bg-warning p-2">Not Completed</span>
+                            }
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="mt-5 d-flex justify-content-between">
+                <a class="btn btn-outline-info" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
+                <a class="btn btn-outline-secondary" asp-action="Index">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>

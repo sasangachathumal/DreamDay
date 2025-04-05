@@ -7,7 +7,7 @@ namespace DreamDay.Business.Interface
         List<Budget> GetAllBudgets();
         List<Budget> GetBudgetsByWeddingId(int weddingId);
         List<Budget> GetBudgetsByCategory(BudgetCategory budgetCategory);
-        Budget GetBudgetByIdAsync(int id);
+        Budget GetBudgetById(int id);
         bool AddBudget(Budget budget);
         bool UpdateBudget(Budget budget);
         bool DeleteBudget(int id);

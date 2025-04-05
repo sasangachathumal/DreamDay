@@ -8,9 +8,10 @@ namespace DreamDay.Business.Interface
         List<Timeline> GetTimelinesByWeddingId(int weddingId);
         List<Timeline> GetTimelinesOfWeddingByStartTime(int weddingId, DateTime startTime);
         List<Timeline> GetTimelinesOfWeddingByStatus(int weddingId, bool isDone);
-        Timeline GetTimelineByIdAsync(int id);
+        Timeline GetTimelineById(int id);
         bool AddTimeline(Timeline timeline);
         bool UpdateTimeline(Timeline timeline);
         bool DeleteTimeline(int id);
+        bool MarkAsDone(int id);
     }
 }

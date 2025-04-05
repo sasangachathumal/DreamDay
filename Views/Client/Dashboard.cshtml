@@ -1,0 +1,249 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    ViewData["Title"] = "Dashboard";
+}
+@model List<Wedding>
+<div class="container-fluid">
+    <h1>Dashboard</h1>
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="card table-card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h3>Wedding ToDo List</h3>
+                        </div>
+                        <div class="col-md-8 d-flex justify-content-end">
+                            <a asp-action="Create" asp-controller="ChecklistItems" class="btn btn-primary">New Checklist Item</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Title</th>
+                                <th scope="col">Desciprion</th>
+                                <th scope="col">Due At</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Count > 0 && Model[0]?.ChecklistItems != null)
+                            {
+                                @foreach (ChecklistItem item in Model[0].ChecklistItems)
+                                {
+                                    @if (!item.IsDone) 
+                                    {
+                                        <tr>
+                                            <td>@item.Title</td>
+                                            <td>@item.Description</td>
+                                            <td>@item.DateTime.ToString("MM/dd/yyyy hh:mm:ss tt")</td>
+                                            <td>
+                                                <form method="post" asp-action="MarkAsDone" asp-controller="Client">
+                                                    <input type="hidden" name="itemId" value="@item.Id" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-success">✅ Mark Done</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center">No ToDo items found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card table-card mt-5">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h3>Wedding Guest List</h3>
+                        </div>
+                        <div class="col-md-8 d-flex justify-content-end">
+                            <a asp-action="Create" asp-controller="Guests" class="btn btn-primary">Add New Guest</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Full Name</th>
+                                <th scope="col">Phone Number</th>
+                                <th scope="col">Meal Preference</th>
+                                <th scope="col">Table Number</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Count > 0 && Model[0]?.Guests != null)
+                            {
+                                @foreach (Guest item in Model[0].Guests)
+                                {
+                                    @if (!item.RSVP)
+                                    {
+                                        <tr>
+                                            <td>@item.FullName</td>
+                                            <td>@item.Phone</td>
+                                            <td>@item.MealPreference</td>
+                                            <td>@item.TableNumber</td>
+                                            <td>
+                                                <form method="post" asp-action="MarkAsAttending" asp-controller="Client">
+                                                    <input type="hidden" name="itemId" value="@item.Id" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-success">✅ Mark Attend</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center">No ToDo items found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Wedding Details</h3>
+                </div>
+                <div class="card-body">
+                    @if (Model != null && Model.Count > 0 && Model[0]?.ChecklistItems != null)
+                    {
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h5 class="mb-1">Wedding Date</h5>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <p class="mb-1">@Model[0].WeddingDate.ToString("MM/dd/yyyy")</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h5 class="mb-1">Wedding Planner</h5>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @if (Model[0].Planner != null)
+                                        {
+                                            <p class="mb-1">@Model[0].Planner?.FirstName @Model[0].Planner?.LastName</p>
+                                            <p class="mb-1">@Model[0].Planner?.Email</p>
+                                            <p class="mb-1">@Model[0].Planner?.PhoneNumber</p>
+                                        } else {
+                                            <p>Select a planner for your wedding</p>
+                                            <a asp-action="SelectPlanner" asp-controller="Weddings" class="btn btn-primary">Select</a>
+                                        }
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h5 class="mb-1">Total Guest Count</h5>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <p class="mb-1">@Model[0].TotalGuests</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h5 class="mb-1">Full Budget</h5>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <p class="mb-1">Rs @Model[0].FullBudget</p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul class="list-group mt-3">
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5 class="mt-1">Manage Wedding Checklist</h5>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a asp-action="Index" asp-controller="ChecklistItems" asp-route-weddingId="@Model[0].Id" class="btn btn-primary">✅ Checklist</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul class="list-group mt-3">
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5 class="mt-1">Manage Wedding Guest List</h5>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a asp-action="Index" asp-controller="Guests" asp-route-weddingId="@Model[0].Id" class="btn btn-primary">👨‍👩‍👧‍👦 Guest List </a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul class="list-group mt-3">
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5 class="mt-1">Manage Wedding Timeline</h5>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a asp-action="Index" asp-controller="Timelines" asp-route-weddingId="@Model[0].Id" class="btn btn-primary">⏰ Timeline</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul class="list-group mt-3">
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5 class="mt-1">Manage Wedding Budget Allocations</h5>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a asp-action="Index" asp-controller="Budgets" asp-route-weddingId="@Model[0].Id" class="btn btn-primary">🪙 Budget</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul class="list-group mt-3">
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5 class="mt-1">Manage Wedding Vendors</h5>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a asp-action="Index" asp-controller="VendorBookings" asp-route-weddingId="@Model[0].Id" class="btn btn-primary">🏯 Vendors</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <p>Weding is not setup yet</p>
+                        <p>Click the button below to setup your wedding</p>
+                        <a asp-action="Create" asp-controller="Weddings" class="btn btn-primary">Setup Wedding</a>
+                    }
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+

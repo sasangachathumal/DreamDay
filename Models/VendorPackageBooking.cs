@@ -14,7 +14,7 @@ namespace DreamDay.Models
         [Required]
         public DateTime BookDate { get; set; }
         [Required]
-        public bool isConfirmed { get; set; }
+        public bool IsConfirmed { get; set; }
 
         [ForeignKey("WeddingID")]
         public required Wedding Wedding { get; set; }

@@ -1,0 +1,89 @@
+﻿@model IEnumerable<DreamDay.Models.Timeline>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+<div class="container-fluid">
+    <h1>Wedding Timelines</h1>
+
+    <p class="w-100 pt-3 pb-3">
+        <a class="btn btn-primary" asp-action="Create">Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Location)
+                </th>
+                <th>
+                    Start Time
+                </th>
+                <th>
+                    End Time
+                </th>
+                <th>
+                    Status
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @if (item.Description == null)
+                        {
+                            <p>~ not provided ~</p>
+                        }
+                        else
+                        {
+                            <p>@item.Description</p>
+                        }
+                    </td>
+                    <td>
+                        @if (item.Location == null)
+                        {
+                            <p>~ not provided ~</p>
+                        }
+                        else
+                        {
+                            <p>@item.Location</p>
+                        }
+                    </td>
+                    <td>
+                        @item.StartTime.ToString("MM/dd/yyyy hh:mm:ss tt")
+                    </td>
+                    <td>
+                        @item.EndTime.ToString("MM/dd/yyyy hh:mm:ss tt")
+                    </td>
+                    <td>
+                        @if (item.IsDone)
+                        {
+                            <span class="badge rounded-pill text-bg-success p-2">Completed</span>
+                        }
+                        else
+                        {
+                            <span class="badge rounded-pill text-bg-warning p-2">Not Completed</span>
+                        }
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a class="btn btn-info ms-3 me-3" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

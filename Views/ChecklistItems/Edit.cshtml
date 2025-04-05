@@ -1,0 +1,44 @@
+﻿@model DreamDay.Models.ChecklistItem
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+<div class="container-fluid">
+    <h1>Edit Checklist Item</h1>
+    <hr />
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="WeddingId" />
+                <div class="form-group">
+                    <label asp-for="Title" class="control-label"></label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DateTime" class="control-label"></label>
+                    <input asp-for="DateTime" class="form-control" />
+                    <span asp-validation-for="DateTime" class="text-danger"></span>
+                </div>
+                <div class="form-group form-check form-switch mt-2">
+                    <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" asp-for="IsDone">
+                    <label class="form-check-label" for="switchCheckDefault">Is Complete</label>
+                </div>
+                <div class="form-group mt-4 d-grid">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+            <div class="mt-5 d-grid">
+                <a class="btn btn-outline-secondary" asp-action="Index">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>

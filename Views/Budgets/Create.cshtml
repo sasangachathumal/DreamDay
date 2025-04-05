@@ -1,0 +1,39 @@
+﻿@model DreamDay.Models.Budget
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+<div class="container-fluid">
+    <h1>Create A New Budget</h1>
+    <hr />
+
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Category" class="control-label"></label>
+                    <select asp-for="Category" class="form-control" asp-items="Html.GetEnumSelectList<BudgetCategory>()"></select>
+                    <span asp-validation-for="Category" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AllocatedAmount" class="control-label">Allocated Amount</label>
+                    <input asp-for="AllocatedAmount" class="form-control" />
+                    <span asp-validation-for="AllocatedAmount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SpendAmount" class="control-label">Spend Amount</label>
+                    <input asp-for="SpendAmount" class="form-control" />
+                    <span asp-validation-for="SpendAmount" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-4 d-grid">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+            <div class="mt-5 d-grid">
+                <a class="btn btn-outline-secondary" asp-action="Index">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>

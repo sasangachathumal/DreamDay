@@ -29,6 +29,7 @@ namespace DreamDay.Models
         public ICollection<ChecklistItem>? ChecklistItems { get; set; }
         public ICollection<Timeline>? Timelines { get; set; }
         public ICollection<Budget>? Budgets { get; set; }
-        
+        public ICollection<VendorPackageBooking>? VendorPackageBookings { get; set; }
+
     }
 }

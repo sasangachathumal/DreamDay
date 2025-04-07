@@ -1,6 +1,7 @@
 ﻿using DreamDay.Business.Interface;
 using DreamDay.Data;
 using DreamDay.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DreamDay.Business.Service
 {
@@ -13,30 +14,65 @@ namespace DreamDay.Business.Service
         }
         public bool AddVendor(Vendor vendor)
         {
-            throw new NotImplementedException();
+            try
+            {
+                // Ensure the VendorCategoryId exists before saving
+                var category = _context.VendorCategories.Find(vendor.VendorCategoryId);
+                if (category == null)
+                {
+                    throw new Exception("Vendor category not found. Cannot add vendor.");
+                }
+
+                vendor.VendorCategory = category; // ✅ Manually assign the category
+
+                _context.Vendors.Add(vendor);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                return false;
+            }
+        }
+
+        public bool UpdateVendor(Vendor vendor)
+        {
+            try
+            {
+                _context.Vendors.Update(vendor);
+                _context.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public bool DeleteVendor(int id)
         {
-            throw new NotImplementedException();
+            var vendor = _context.Vendors.Find(id);
+            if (vendor == null) return false;
+
+            _context.Vendors.Remove(vendor);
+            _context.SaveChanges();
+            return true;
         }
+
 
         public List<Vendor> GetAllVendors()
         {
-            throw new NotImplementedException();
+            return _context.Vendors.Include(v => v.VendorCategory).ToList();
         }
 
-        public Vendor GetVendorByIdAsync(int id)
+        public Vendor GetVendorById(int id)
         {
-            throw new NotImplementedException();
+            return _context.Vendors.Include(v => v.VendorCategory).FirstOrDefault(v => v.Id == id);
         }
+
 
         public List<Vendor> GetVendorsByCategoryId(int categoryId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool UpdateVendor(Vendor vendor)
         {
             throw new NotImplementedException();
         }

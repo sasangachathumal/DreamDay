@@ -1,6 +1,7 @@
 ﻿using DreamDay.Business.Interface;
 using DreamDay.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DreamDay.Controllers
 {
@@ -83,15 +84,16 @@ namespace DreamDay.Controllers
 
 
         // Display the Add Vendor form
-        public IActionResult Vendor()
+        public IActionResult VendorAdd()
         {
             var vendorCategories = _vendorCategoryService.GetAllVendorCategories();
             ViewBag.VendorCategories = vendorCategories;
-            return View("~/Views/Vendor/Vendor.cshtml");
+            return View("~/Views/Vendor/VendorAdd.cshtml");
         }
-
+        
+        // Vendor Add
         [HttpPost]
-        public IActionResult Vendor(Vendor model)
+        public IActionResult VendorAdd(Vendor model)
         {
             if (ModelState.IsValid)
             {
@@ -101,7 +103,7 @@ namespace DreamDay.Controllers
                     if (success)
                     {
                         TempData["SuccessMessage"] = "Vendor added successfully!";
-                        return RedirectToAction("VendorCategoryList");
+                        return RedirectToAction("VendorList");
                     }
                     else
                     {
@@ -120,16 +122,71 @@ namespace DreamDay.Controllers
 
             // Reload Vendor Categories in case of an error
             ViewBag.VendorCategories = _vendorCategoryService.GetAllVendorCategories();
-            return View("~/Views/Vendor/Vendor.cshtml", model);
+            return View("~/Views/Vendor/VendorAdd.cshtml", model);
         }
 
 
-        //Add pacage
+        public IActionResult VendorList()
+        {
+            var vendors = _vendorService.GetAllVendors(); // Includes VendorCategory via Include
+            return View("~/Views/Vendor/VendorList.cshtml", vendors);
+        }
+
+
+        // Delete Vendor
+        public IActionResult DeleteVendor(int id)
+        {
+            var success = _vendorService.DeleteVendor(id);
+            if (success)
+            {
+                TempData["SuccessMessage"] = "Vendor deleted successfully!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Failed to delete vendor!";
+            }
+
+            return RedirectToAction("VendorList");
+        }
+
+        // GET: Edit
+        public IActionResult EditVendor(int id)
+        {
+            var vendor = _vendorService.GetVendorById(id); // or await if async
+            if (vendor == null) return NotFound();
+
+            ViewBag.VendorCategories = new SelectList(_vendorCategoryService.GetAllVendorCategories(), "Id", "Name", vendor.VendorCategoryId);
+            return View("VendorEdit", vendor);
+        }
+
+        // POST: Edit
+        [HttpPost]
+        public IActionResult EditVendor(Vendor model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.VendorCategories = new SelectList(_vendorCategoryService.GetAllVendorCategories(), "Id", "Name", model.VendorCategoryId);
+                return View("VendorEdit", model);
+            }
+
+            var result = _vendorService.UpdateVendor(model);
+            if (result)
+            {
+                TempData["SuccessMessage"] = "Vendor updated successfully!";
+                return RedirectToAction("VendorList");
+            }
+
+            TempData["ErrorMessage"] = "Update failed!";
+            ViewBag.VendorCategories = new SelectList(_vendorCategoryService.GetAllVendorCategories(), "Id", "Name", model.VendorCategoryId);
+            return View("VendorEdit", model);
+        }
+
+        //Add Package
 
         public IActionResult AddPackage()
         {
             ViewBag.Vendors = _vendorService.GetAllVendors();
-            return View("~/Views/Vendor/AddPackage.cshtml");
+            return View("AddPackage");
         }
 
         [HttpPost]
@@ -143,8 +200,63 @@ namespace DreamDay.Controllers
             }
 
             ViewBag.Vendors = _vendorService.GetAllVendors();
-            return View("~/Views/Vendor/AddPackage.cshtml", model);
+            return View("AddPackage", model);
         }
+
+        public IActionResult PackageList()
+        {
+            var packages = _vendorPackageService.GetAllVendorPackages();
+            return View("PackageList", packages);
+        }
+        public IActionResult DeletePackage(int id)
+        {
+            bool result = _vendorPackageService.DeleteVendorPackage(id);
+
+            if (result)
+            {
+                TempData["SuccessMessage"] = "Package deleted successfully!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Package deletion failed!";
+            }
+
+            return RedirectToAction("PackageList");
+        }
+
+        // GET: EditPackage
+        public IActionResult EditPackageList(int id)
+        {
+            var package = _vendorPackageService.GetVendorPackageById(id);
+            if (package == null) return NotFound();
+
+            ViewBag.Vendors = _vendorService.GetAllVendors();
+            return View("EditPackageList", package);
+        }
+
+        // POST: EditPackage
+        [HttpPost]
+        public IActionResult EditPackageList(VendorPackage model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Vendors = _vendorService.GetAllVendors();
+                return View("EditPackageList", model);
+            }
+
+            bool result = _vendorPackageService.UpdateVendorPackage(model);
+            if (result)
+            {
+                TempData["SuccessMessage"] = "Package updated successfully!";
+                return RedirectToAction("PackageList");
+            }
+
+            TempData["ErrorMessage"] = "Package update failed!";
+            ViewBag.Vendors = _vendorService.GetAllVendors();
+            return View("EditPackageList", model);
+        }
+
+
 
     }
 }

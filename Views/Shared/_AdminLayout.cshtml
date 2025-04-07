@@ -10,6 +10,7 @@
     <title>@ViewData["Title"] - Admin Dashboard</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/adminLayout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 <body>
     <div class="container-fluid vh-100">
@@ -22,21 +23,50 @@
                     <hr>
                     <ul class="nav flex-column mb-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" asp-area="" asp-controller="Admin" asp-action="Dashboard">Dashboard</a>
+                            <a class="nav-link active" asp-area="" asp-controller="Admin" asp-action="Dashboard">
+                                <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="ManageUsers">Manage Users</a>
+                            <a href="#" class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#vendorSubmenu" aria-expanded="false">
+                                <span><i class="bi bi-shop me-2"></i> Vendor</span>
+                                <i class="bi bi-chevron-down"></i>
+                            </a>
+                            <ul class="collapse list-unstyled ps-3" id="vendorSubmenu">
+                                <li>
+                                    <a class="nav-link" asp-area="" asp-controller="Vendor" asp-action="VendorCategoryList">
+                                        <i class="bi bi-person-plus me-2"></i> Vendor Category List
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="nav-link" asp-area="" asp-controller="Vendor" asp-action="VendorList">
+                                        <i class="bi bi-pencil-square me-2"></i>  Vendor List
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="nav-link" asp-area="" asp-controller="Vendor" asp-action="PackageList">
+                                        <i class="bi bi-pencil-square me-2"></i> Package List
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="ManageUsers">
+                                <i class="bi bi-people me-2"></i> Manage Users
+                            </a>
                         </li>
                         <li>
-                            <a href="#" class="nav-link">
-                                Products
+                            <a class="nav-link" asp-area="" asp-controller="VendorReviews" asp-action="Index">
+                                <i class="bi bi-box me-2"></i> Vendor Reviews
                             </a>
                         </li>
                         <li>
                             <a href="#" class="nav-link">
-                                Customers
+                                <i class="bi bi-person me-2"></i> Customers
                             </a>
                         </li>
+                        
                     </ul>
                     <hr>
                     @if (SignInManager.IsSignedIn(User))
@@ -63,6 +93,9 @@
             </div>
         </div>
     </div>
+
+
+
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

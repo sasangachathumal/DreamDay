@@ -3,6 +3,7 @@ using DreamDay.Business.Service;
 using DreamDay.Data;
 using DreamDay.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,23 +31,16 @@ namespace DreamDay.Controllers
         public IActionResult Dashboard()
         {
             var SignedInUser = _signInManager.UserManager.GetUserAsync(User).Result;
-            var weddings = _weddingService.GetWeddingByClientId(SignedInUser?.Id);
+            var wedding = _weddingService.GetWeddingByClientId(SignedInUser?.Id);
 
-            if (weddings == null)
+            if (wedding != null)
             {
-                return NotFound();
+                HttpContext.Session.SetInt32("WeddingId", wedding.Id);
+                wedding.ChecklistItems = _checklistItemService.GetChecklistItemsByWeddingId(wedding.Id);
+                wedding.Guests = _guestService.GetGuestsByWeddingId(wedding.Id);
             }
 
-            if (weddings.Count > 0)
-            {
-                foreach (var wedding in weddings)
-                {
-                    wedding.ChecklistItems = _checklistItemService.GetChecklistItemsByWeddingId(wedding.Id);
-                    wedding.Guests = _guestService.GetGuestsByWeddingId(wedding.Id);
-                }
-            }
-
-            return View(weddings);
+            return View(wedding);
         }
 
         public IActionResult MarkAsDone(int itemId)

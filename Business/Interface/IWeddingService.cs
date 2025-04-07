@@ -5,7 +5,7 @@ namespace DreamDay.Business.Interface
     public interface IWeddingService
     {
         List<Wedding> GetAllWeddings();
-        List<Wedding> GetWeddingByClientId(string clientId);
+        Wedding GetWeddingByClientId(string clientId);
         List<Wedding> GetWeddingByPlannerId(string plannerId);
         Wedding GetWeddingById(int id);
         bool AddWedding(Wedding wedding);

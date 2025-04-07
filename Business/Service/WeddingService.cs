@@ -37,20 +37,25 @@ namespace DreamDay.Business.Service
             throw new NotImplementedException();
         }
 
-        public List<Wedding> GetWeddingByClientId(string clientId)
+        public Wedding GetWeddingByClientId(string clientId)
         {
             if (clientId == null)
             {
-                return new List<Wedding>();
+                return null;
             }
 
-            var weddings = _context.Weddings
+            var wedding = _context.Weddings
                 .Include(w => w.Client)
                 .Include(w => w.Planner)
-                .Where(m => m.ClientId == clientId)
-                .ToList();
-
-            return weddings;
+                .FirstOrDefault(m => m.ClientId == clientId);
+            if (wedding == null)
+            {
+                return null;
+            }
+            else
+            {
+                return wedding;
+            }
         }
 
         public Wedding GetWeddingById(int id)

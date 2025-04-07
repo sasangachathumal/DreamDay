@@ -16,7 +16,7 @@ namespace DreamDay.Models
         public decimal Price { get; set; }
 
         [ForeignKey("VendorId")]
-        public required Vendor Vendor { get; set; }
+        public  Vendor? Vendor { get; set; }
 
         public ICollection<AppImages>? AppImages { get; set; }
         public ICollection<VendorPackageBooking>? VendorPackageBookings { get; set; }

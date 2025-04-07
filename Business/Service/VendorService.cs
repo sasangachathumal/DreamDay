@@ -36,31 +36,43 @@ namespace DreamDay.Business.Service
             }
         }
 
-
-
-
+        public bool UpdateVendor(Vendor vendor)
+        {
+            try
+            {
+                _context.Vendors.Update(vendor);
+                _context.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         public bool DeleteVendor(int id)
         {
-            throw new NotImplementedException();
+            var vendor = _context.Vendors.Find(id);
+            if (vendor == null) return false;
+
+            _context.Vendors.Remove(vendor);
+            _context.SaveChanges();
+            return true;
         }
+
 
         public List<Vendor> GetAllVendors()
         {
             return _context.Vendors.Include(v => v.VendorCategory).ToList();
         }
 
-        public Vendor GetVendorByIdAsync(int id)
+        public Vendor GetVendorById(int id)
         {
-            throw new NotImplementedException();
+            return _context.Vendors.Include(v => v.VendorCategory).FirstOrDefault(v => v.Id == id);
         }
+
 
         public List<Vendor> GetVendorsByCategoryId(int categoryId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool UpdateVendor(Vendor vendor)
         {
             throw new NotImplementedException();
         }

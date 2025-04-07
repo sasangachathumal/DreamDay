@@ -1,0 +1,61 @@
+﻿@model List<DreamDay.Models.VendorPackage>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Vendor Packages";
+}
+
+<h2>Vendor Package List</h2>
+<div class="d-flex justify-content-between mb-3">
+    <h4>Vendor List</h4>
+    <a href="@Url.Action("AddPackage", "Vendor")" class="btn btn-primary">+ Add New Package</a>
+</div>
+
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Package Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Vendor</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            int index = 1;
+            foreach (var package in Model)
+            {
+                <tr>
+                    <td>@index</td>
+                    <td>@package.Name</td>
+                    <td>@package.Description</td>
+                    <td>@package.Price.ToString("C")</td>
+                    <td>@package.Vendor?.Name</td>
+                    <td>
+                        <a asp-action="EditPackageList" asp-route-id="@package.Id" class="btn btn-sm btn-primary">Edit</a>
+
+                        <a asp-action="DeletePackage" asp-route-id="@package.Id" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+
+                    </td>
+                </tr>
+                index++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">No packages found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

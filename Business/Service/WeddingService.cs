@@ -60,7 +60,18 @@ namespace DreamDay.Business.Service
 
         public List<Wedding> GetWeddingByPlannerId(string plannerId)
         {
-            throw new NotImplementedException();
+            if (plannerId == null)
+            {
+                return new List<Wedding>();
+            }
+
+            var weddings = _context.Weddings
+                .Include(w => w.Client)
+                .Include(w => w.Planner)
+                .Where(m => m.PlannerId == plannerId)
+                .ToList();
+
+            return weddings;
         }
 
         public bool UpdateWedding(Wedding wedding)

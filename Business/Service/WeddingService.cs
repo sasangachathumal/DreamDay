@@ -60,7 +60,27 @@ namespace DreamDay.Business.Service
 
         public Wedding GetWeddingById(int id)
         {
-            throw new NotImplementedException();
+            if (id == 0)
+            {
+                return null;
+            }
+            try
+            {
+                var wedding = _context.Weddings
+                .FirstOrDefault(m => m.Id == id);
+                if (wedding == null)
+                {
+                    return null;
+                }
+                return wedding;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (important for debugging)
+                Console.WriteLine($"Error on getting wedding item: {ex.Message}");
+                // Optionally return false
+                return null;
+            }
         }
 
         public List<Wedding> GetWeddingByPlannerId(string plannerId)

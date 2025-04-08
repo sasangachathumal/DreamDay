@@ -7,23 +7,59 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DreamDay.Data;
 using DreamDay.Models;
+using DreamDay.Business.Interface;
 
 namespace DreamDay.Controllers
 {
     public class VendorsCatalogController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IVendorService _vendorService;
+        private readonly IVendorPackageService _vendorPackageService;
+        private readonly IVendorReviewService _vendorReviewService;
 
-        public VendorsCatalogController(ApplicationDbContext context)
+        public VendorsCatalogController(
+            ApplicationDbContext context,
+            IVendorService vendorService,
+            IVendorPackageService vendorPackageService,
+            IVendorReviewService vendorReviewService)
         {
             _context = context;
+            _vendorService = vendorService;
+            _vendorPackageService = vendorPackageService;
+            _vendorReviewService = vendorReviewService;
         }
 
         // GET: VendorsCatalog
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Vendors.Include(v => v.VendorCategory);
-            return View(await applicationDbContext.ToListAsync());
+            // Get all vendors with their categories
+            var vendors = _vendorService.GetAllVendors();
+
+            if (vendors != null && vendors.Count >0)
+            {
+                foreach (var vendor in vendors)
+                {
+                    // Get the vendor's packages
+                    var packages = _vendorPackageService.GetVendorPackageById(vendor.Id);
+                    // Check if packages are not null
+                    if (packages != null)
+                    {
+                        // Assign the packages to the vendor
+                        vendor.VendorPackages = new List<VendorPackage> { packages };
+                    }
+                    // Get the vendor's reviews
+                    var reviews = _vendorReviewService.GetVendorReviewById(vendor.Id);
+                    // Check if reviews are not null
+                    if (reviews != null)
+                    {
+                        // Assign the reviews to the vendor
+                        vendor.VendorReviews = new List<VendorReviews> { reviews };
+                    }
+                }
+            }
+
+            return View(vendors);
         }
 
         // GET: VendorsCatalog/Details/5

@@ -38,7 +38,7 @@
                     <td>@index</td>
                     <td>@package.Name</td>
                     <td>@package.Description</td>
-                    <td>@package.Price.ToString("C")</td>
+                    <td>@package.Price.ToString("C", new System.Globalization.CultureInfo("en-LK"))</td>
                     <td>@package.Vendor?.Name</td>
                     <td>
                         <a asp-action="EditPackageList" asp-route-id="@package.Id" class="btn btn-sm btn-primary">Edit</a>

@@ -9,19 +9,30 @@ using DreamDay.Data;
 using DreamDay.Models;
 using DreamDay.Business.Service;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using DreamDay.Business.Interface;
 
 namespace DreamDay.Controllers
 {
-    [Authorize(Roles = "Client, Planner, Admin")]
+    [Authorize(Roles = "Client")]
     public class WeddingsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly WeddingService _weddingService;
+        private readonly IWeddingService _weddingService;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public WeddingsController(ApplicationDbContext context, WeddingService weddingService)
+        public WeddingsController(
+            ApplicationDbContext context,
+            IWeddingService weddingService, 
+            SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager
+            )
         {
             _context = context;
             _weddingService = weddingService;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         // GET: Weddings
@@ -54,8 +65,6 @@ namespace DreamDay.Controllers
         // GET: Weddings/Create
         public IActionResult Create()
         {
-            ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["PlannerId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -64,10 +73,16 @@ namespace DreamDay.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ClientId,PlannerId,WeddingDate,TotalGuests,FullBudget")] Wedding wedding)
+        public async Task<IActionResult> Create([Bind("Id,WeddingDate,TotalGuests,FullBudget")] Wedding wedding)
         {
+            ModelState.Remove("Client");
+            ModelState.Remove("Planner");
+            ModelState.Remove("ClientId");
+            ModelState.Remove("PlannerId");
             if (ModelState.IsValid)
             {
+                var SignedInUser = _signInManager.UserManager.GetUserAsync(User).Result;
+                wedding.ClientId = SignedInUser.Id;
                 var result = _weddingService.AddWedding(wedding);
                 if (result)
                 {
@@ -78,8 +93,6 @@ namespace DreamDay.Controllers
 
                 }
             }
-            ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id", wedding.ClientId);
-            ViewData["PlannerId"] = new SelectList(_context.Users, "Id", "Id", wedding.PlannerId);
             return View(wedding);
         }
 

@@ -17,7 +17,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddScoped<IAppImageService, AppImageService>();
+builder.Services.AddScoped<IVendorImageService, VendorImageService>();
 builder.Services.AddScoped<IBudgetService, BudgetService>();
 builder.Services.AddScoped<IChecklistItemService, ChecklistItemService>();
 builder.Services.AddScoped<IGuestService, GuestService>();
@@ -91,8 +91,18 @@ async Task SeedRolesAsync(UserManager<ApplicationUser> userManager, RoleManager<
         }
     }
 
+    //// Create default users
+    //var users = new List<string[]>
+    //{
+    //    new string[] { "Admin", "admin@admin.com", "Admin User" },
+    //    new string[] { "Client", "client1@client.com", "Client User1" },
+    //    new string[] { "Client", "client2@client.com", "Client User2" },
+    //    new string[] { "Planner", "planner@planner.com", "Planner User" }
+    //};
+
     string adminEmail = "admin@admin.com";
     string clientEmail = "client@client.com";
+    string clientTwoEmail = "clientTwo@client.com";
     string plannerEmail = "planner@plannert.com";
     string password = "Pass@123";
 
@@ -129,6 +139,23 @@ async Task SeedRolesAsync(UserManager<ApplicationUser> userManager, RoleManager<
         if (result.Succeeded)
         {
             await userManager.AddToRoleAsync(clientUser, "Client");
+        }
+    }
+
+    var clientUser2 = await userManager.FindByEmailAsync(clientTwoEmail);
+    if (clientUser2 == null)
+    {
+        clientUser2 = new ApplicationUser
+        {
+            UserName = clientTwoEmail,
+            Email = clientTwoEmail,
+            FirstName = "Client",
+        };
+
+        var result = await userManager.CreateAsync(clientUser2, password);
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(clientUser2, "Client");
         }
     }
 

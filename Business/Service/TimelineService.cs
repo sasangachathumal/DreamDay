@@ -28,7 +28,7 @@ namespace DreamDay.Business.Service
             {
                 // Log the exception (important for debugging)
                 Console.WriteLine($"Error adding timeline item: {ex.Message}");
-                // Optionally return false or a specific error code/message
+                // Optionally return false
                 return false;
             }
         }
@@ -59,7 +59,7 @@ namespace DreamDay.Business.Service
             {
                 // Log the exception (important for debugging)
                 Console.WriteLine($"Error deleting timeline item (ID: {id}): {ex.Message}");
-                // Optionally return false or a specific error code/message
+                // Optionally return false
                 return false;
             }
         }
@@ -90,7 +90,7 @@ namespace DreamDay.Business.Service
             {
                 // Log the exception (important for debugging)
                 Console.WriteLine($"Error on getting timeline item: {ex.Message}");
-                // Optionally return false or a specific error code/message
+                // Optionally return false
                 return null;
             }
         }
@@ -114,7 +114,7 @@ namespace DreamDay.Business.Service
             {
                 // Log the exception (important for debugging)
                 Console.WriteLine($"Error retrieving timeline items for wedding (ID: {weddingId}): {ex.Message}");
-                // Optionally return an empty list or a specific error code/message
+                // Optionally return an empty list
                 return new List<Timeline>();
             }
         }

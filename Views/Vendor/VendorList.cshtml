@@ -36,6 +36,7 @@
                 <td>@vendor.Address</td>
                 <td>@vendor.Description</td>
                 <td>
+                    <a asp-route-vendorId="@vendor.Id" asp-controller="VendorImages" asp-action="Index" class="btn btn-sm btn-primary">Image List</a>
                     <a asp-action="EditVendor" asp-route-id="@vendor.Id" class="btn btn-sm btn-warning">Edit</a>
                     <a asp-action="DeleteVendor" asp-route-id="@vendor.Id" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this vendor?');">Delete</a>
                 </td>

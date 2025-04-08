@@ -18,5 +18,6 @@ namespace DreamDay.Data
         public DbSet<VendorReviews> VendorReviews { get; set; }
         public DbSet<VendorPackage> VendorPackages { get; set; }
         public DbSet<VendorPackageBooking> VendorPackagesBooking { get; set; }
+        public DbSet<DreamDay.Models.VendorImages> VendorImages { get; set; } = default!;
     }
 }

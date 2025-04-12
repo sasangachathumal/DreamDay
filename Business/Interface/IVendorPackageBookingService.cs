@@ -11,5 +11,6 @@ namespace DreamDay.Business.Interface
         bool AddVendorPackageBooking(VendorPackageBooking vendorPackageBooking);
         bool UpdateVendorPackageBooking(VendorPackageBooking vendorPackageBooking);
         bool DeleteVendorPackageBooking(int id);
+        bool ConfirmVendorPackageBooking(int id);
     }
 }

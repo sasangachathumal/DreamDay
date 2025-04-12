@@ -17,18 +17,26 @@ namespace DreamDay.Controllers
         private readonly IVendorPackageBookingService _vendorPackageBookingService;
         private readonly IWeddingService _weddingService;
         private readonly IVendorPackageService _vendorPackageService;
-        //private readonly IVendorService _vendorService;
+        private readonly IVendorService _vendorService;
+        private readonly IVendorImageService _vendorImageService;
+        private readonly IVendorReviewService _vendorReviewService;
 
         public VendorPackageBookingsController(
             ApplicationDbContext context, 
             IVendorPackageBookingService vendorPackageBookingService,
             IWeddingService weddingService,
-            IVendorPackageService vendorPackageService)
+            IVendorPackageService vendorPackageService,
+            IVendorService vendorService,
+            IVendorImageService vendorImageService,
+            IVendorReviewService vendorReviewService)
         {
             _context = context;
             _vendorPackageBookingService = vendorPackageBookingService;
             _weddingService = weddingService;
             _vendorPackageService = vendorPackageService;
+            _vendorService = vendorService;
+            _vendorImageService = vendorImageService;
+            _vendorReviewService = vendorReviewService;
         }
 
         // GET: VendorPackageBookings
@@ -51,150 +59,97 @@ namespace DreamDay.Controllers
                 {
                     packageBooking.Wedding = _weddingService.GetWeddingById(packageBooking.WeddingID);
                     packageBooking.VendorPackage = _vendorPackageService.GetVendorPackageById(packageBooking.VendorPackageID);
+                    packageBooking.VendorPackage.Vendor = _vendorService.GetVendorById(packageBooking.VendorPackage.VendorId);
+                    packageBooking.VendorPackage.Vendor.VendorImages = _vendorImageService.GetAppImagesByVendorID(packageBooking.VendorPackage.VendorId);
                 }
             }
             return View(packageBookings);
         }
 
-        // GET: VendorPackageBookings/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var vendorPackageBooking = await _context.VendorPackagesBooking
-                .Include(v => v.VendorPackage)
-                .Include(v => v.Wedding)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (vendorPackageBooking == null)
-            {
-                return NotFound();
-            }
-
-            return View(vendorPackageBooking);
-        }
-
         // GET: VendorPackageBookings/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["VendorPackageID"] = new SelectList(_context.VendorPackages, "Id", "Name");
-            ViewData["WeddingID"] = new SelectList(_context.Weddings, "Id", "ClientId");
-            return View();
+            var vendors = _vendorService.GetAllVendors();
+            if (vendors != null)
+            {
+                foreach (var vendor in vendors)
+                {
+                    vendor.VendorPackages = _vendorPackageService.GetVendorPackagesByVendorId(vendor.Id);
+                    vendor.VendorReviews = _vendorReviewService.GetVendorReviewsByVendorId(vendor.Id);
+                    vendor.VendorImages = _vendorImageService.GetAppImagesByVendorID(vendor.Id);
+                }
+            }
+            return View(vendors);
         }
 
-        // POST: VendorPackageBookings/Create
+        public async Task<IActionResult> ReviewView(Vendor vendor)
+        {
+            if (vendor != null)
+            {
+                vendor.VendorReviews = _vendorReviewService.GetVendorReviewsByVendorId(vendor.Id);
+            }
+
+            return View(vendor);
+        }
+
+        public async Task<IActionResult> PackageView(Vendor vendor)
+        {
+            if (vendor != null)
+            {
+                vendor.VendorPackages = _vendorPackageService.GetVendorPackagesByVendorId(vendor.Id);
+            }
+            return View(vendor);
+        }
+
+        // POST: VendorPackageBookings/Book
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,WeddingID,VendorPackageID,BookDate,IsConfirmed")] VendorPackageBooking vendorPackageBooking)
+        public async Task<IActionResult> Book(int vendorPackageId)
         {
-            if (ModelState.IsValid)
+            if (vendorPackageId != 0)
             {
-                _context.Add(vendorPackageBooking);
-                await _context.SaveChangesAsync();
+                int _WeddingId = 0;
+                var sessionWeddingId = HttpContext.Session.GetInt32("WeddingId");
+                if (sessionWeddingId.HasValue)
+                {
+                    _WeddingId = sessionWeddingId.Value;
+                }
+                else
+                {
+                    _WeddingId = 0;
+                }
+
+                var wedding = _weddingService.GetWeddingById(_WeddingId);
+
+                var packageBooking = new VendorPackageBooking
+                {
+                    VendorPackageID = vendorPackageId,
+                    WeddingID = wedding.Id,
+                    BookDate = wedding.WeddingDate
+                };
+
+                _vendorPackageBookingService.AddVendorPackageBooking(packageBooking);
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["VendorPackageID"] = new SelectList(_context.VendorPackages, "Id", "Name", vendorPackageBooking.VendorPackageID);
-            ViewData["WeddingID"] = new SelectList(_context.Weddings, "Id", "ClientId", vendorPackageBooking.WeddingID);
-            return View(vendorPackageBooking);
-        }
-
-        // GET: VendorPackageBookings/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var vendorPackageBooking = await _context.VendorPackagesBooking.FindAsync(id);
-            if (vendorPackageBooking == null)
-            {
-                return NotFound();
-            }
-            ViewData["VendorPackageID"] = new SelectList(_context.VendorPackages, "Id", "Name", vendorPackageBooking.VendorPackageID);
-            ViewData["WeddingID"] = new SelectList(_context.Weddings, "Id", "ClientId", vendorPackageBooking.WeddingID);
-            return View(vendorPackageBooking);
-        }
-
-        // POST: VendorPackageBookings/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,WeddingID,VendorPackageID,BookDate,IsConfirmed")] VendorPackageBooking vendorPackageBooking)
-        {
-            if (id != vendorPackageBooking.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(vendorPackageBooking);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!VendorPackageBookingExists(vendorPackageBooking.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["VendorPackageID"] = new SelectList(_context.VendorPackages, "Id", "Name", vendorPackageBooking.VendorPackageID);
-            ViewData["WeddingID"] = new SelectList(_context.Weddings, "Id", "ClientId", vendorPackageBooking.WeddingID);
-            return View(vendorPackageBooking);
-        }
-
-        // GET: VendorPackageBookings/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var vendorPackageBooking = await _context.VendorPackagesBooking
-                .Include(v => v.VendorPackage)
-                .Include(v => v.Wedding)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (vendorPackageBooking == null)
-            {
-                return NotFound();
-            }
-
-            return View(vendorPackageBooking);
-        }
-
-        // POST: VendorPackageBookings/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var vendorPackageBooking = await _context.VendorPackagesBooking.FindAsync(id);
-            if (vendorPackageBooking != null)
-            {
-                _context.VendorPackagesBooking.Remove(vendorPackageBooking);
-            }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool VendorPackageBookingExists(int id)
+        // GET: VendorPackageBookings/Delete/5
+        public async Task<IActionResult> Delete(int id)
         {
-            return _context.VendorPackagesBooking.Any(e => e.Id == id);
+            _vendorPackageBookingService.DeleteVendorPackageBooking(id);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: VendorPackageBookings/Confirm/5
+        public async Task<IActionResult> Confirm(int id)
+        {
+            _vendorPackageBookingService.ConfirmVendorPackageBooking(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

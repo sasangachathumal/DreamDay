@@ -91,15 +91,6 @@ async Task SeedRolesAsync(UserManager<ApplicationUser> userManager, RoleManager<
         }
     }
 
-    //// Create default users
-    //var users = new List<string[]>
-    //{
-    //    new string[] { "Admin", "admin@admin.com", "Admin User" },
-    //    new string[] { "Client", "client1@client.com", "Client User1" },
-    //    new string[] { "Client", "client2@client.com", "Client User2" },
-    //    new string[] { "Planner", "planner@planner.com", "Planner User" }
-    //};
-
     string adminEmail = "admin@admin.com";
     string clientEmail = "client@client.com";
     string clientTwoEmail = "clientTwo@client.com";

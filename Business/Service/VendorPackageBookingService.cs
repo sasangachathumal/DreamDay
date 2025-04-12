@@ -167,5 +167,36 @@ namespace DreamDay.Business.Service
                 return false;
             }
         }
+
+        public bool ConfirmVendorPackageBooking(int id)
+        {
+            if (id == 0)
+            {
+                return false;
+            }
+            try
+            {
+                var vendorPackageBooking = _context.VendorPackagesBooking
+                .FirstOrDefault(m => m.Id == id);
+                if (vendorPackageBooking == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    vendorPackageBooking.IsConfirmed = true;
+                    _context.Update(vendorPackageBooking);
+                    _context.SaveChanges();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (important for debugging)
+                Console.WriteLine($"Error confirming vendorPackageBooking (ID: {id}): {ex.Message}");
+                // Optionally return false
+                return false;
+            }
+        }
     }
 }

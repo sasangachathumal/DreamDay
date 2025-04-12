@@ -65,6 +65,139 @@
                 <div class="card-header">
                     <div class="row">
                         <div class="col-md-4">
+                            <h3>Wedding Timeline</h3>
+                        </div>
+                        <div class="col-md-8 d-flex justify-content-end">
+                            <a asp-action="Create" asp-controller="Timelines" class="btn btn-primary">Add New Timeline</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Title</th>
+                                <th scope="col">Start Time</th>
+                                <th scope="col">End Time</th>
+                                <th scope="col">Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Timelines != null)
+                            {
+                                @foreach (Timeline item in Model.Timelines)
+                                {
+                                    <tr>
+                                        <td>@item.Title</td>
+                                        <td>@item.StartTime.ToString("MM/dd/yyyy hh:mm:ss tt")</td>
+                                        <td>@item.EndTime.ToString("MM/dd/yyyy hh:mm:ss tt")</td>
+                                        <td>
+                                            @if (item.IsDone)
+                                            {
+                                                <span class="badge rounded-pill text-bg-success p-2">Completed</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge rounded-pill text-bg-warning p-2">Not Completed</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (!item.IsDone)
+                                            {
+                                                <form method="post" asp-action="MarkRimelineAsDone" asp-controller="Client">
+                                                    <input type="hidden" name="itemId" value="@item.Id" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-success">✅ Mark Done</button>
+                                                </form>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center">No Timeline items found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card table-card">
+                <div class="card-header">
+                    <h3>Wedding Details</h3>
+                </div>
+                <div class="card-body">
+                    @if (Model != null && Model.ChecklistItems != null)
+                    {
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h5 class="mb-0">Wedding Date</h5>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <p class="mb-0">@Model.WeddingDate.ToString("MM/dd/yyyy")</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h5 class="mb-0">Wedding Planner</h5>
+                                    </div>
+                                    <div class="col-md-9">
+                                        @if (Model.Planner != null)
+                                        {
+                                            <p class="mb-1">@Model.Planner?.FirstName @Model.Planner?.LastName</p>
+                                            <p class="mb-1">@Model.Planner?.Email</p>
+                                            <p class="mb-1">@Model.Planner?.PhoneNumber</p>
+                                        } else {
+                                            <div class="d-flex gap-3">
+                                                <p class="mb-0">Select a planner for your wedding</p>
+                                                <a asp-action="SelectPlanner" asp-controller="Weddings" class="btn btn-primary btn-sm" style="height: fit-content;">Select</a>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h5 class="mb-0">Total Guest Count</h5>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <p class="mb-0">@Model.TotalGuests</p>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h5 class="mb-0">Full Budget</h5>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <p class="mb-0">Rs @Model.FullBudget</p>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <p>Weding is not setup yet</p>
+                        <p>Click the button below to setup your wedding</p>
+                        <a asp-action="Create" asp-controller="Weddings" class="btn btn-primary">Setup Wedding</a>
+                    }
+                </div>
+            </div>
+            <div class="card table-card mt-5">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-4">
                             <h3>Wedding Guest List</h3>
                         </div>
                         <div class="col-md-8 d-flex justify-content-end">
@@ -116,134 +249,6 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Wedding Details</h3>
-                </div>
-                <div class="card-body">
-                    @if (Model != null && Model.ChecklistItems != null)
-                    {
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <h5 class="mb-1">Wedding Date</h5>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <p class="mb-1">@Model.WeddingDate.ToString("MM/dd/yyyy")</p>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <h5 class="mb-1">Wedding Planner</h5>
-                                    </div>
-                                    <div class="col-md-9">
-                                        @if (Model.Planner != null)
-                                        {
-                                            <p class="mb-1">@Model.Planner?.FirstName @Model.Planner?.LastName</p>
-                                            <p class="mb-1">@Model.Planner?.Email</p>
-                                            <p class="mb-1">@Model.Planner?.PhoneNumber</p>
-                                        } else {
-                                            <p>Select a planner for your wedding</p>
-                                            <a asp-action="SelectPlanner" asp-controller="Weddings" class="btn btn-primary">Select</a>
-                                        }
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <h5 class="mb-1">Total Guest Count</h5>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <p class="mb-1">@Model.TotalGuests</p>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <h5 class="mb-1">Full Budget</h5>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <p class="mb-1">Rs @Model.FullBudget</p>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                        <ul class="list-group mt-3">
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h5 class="mt-1">Manage Wedding Checklist</h5>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <a asp-action="Index" asp-controller="ChecklistItems" class="btn btn-primary">✅ Checklist</a>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                        <ul class="list-group mt-3">
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h5 class="mt-1">Manage Wedding Guest List</h5>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <a asp-action="Index" asp-controller="Guests" class="btn btn-primary">👨‍👩‍👧‍👦 Guest List </a>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                        <ul class="list-group mt-3">
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h5 class="mt-1">Manage Wedding Timeline</h5>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <a asp-action="Index" asp-controller="Timelines" class="btn btn-primary">⏰ Timeline</a>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                        <ul class="list-group mt-3">
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h5 class="mt-1">Manage Wedding Budget Allocations</h5>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <a asp-action="Index" asp-controller="Budgets" class="btn btn-primary">🪙 Budget</a>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                        <ul class="list-group mt-3">
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h5 class="mt-1">Manage Wedding Vendors</h5>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <a asp-action="Index" asp-controller="VendorPackageBookings" class="btn btn-primary">🏯 Vendors</a>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    }
-                    else
-                    {
-                        <p>Weding is not setup yet</p>
-                        <p>Click the button below to setup your wedding</p>
-                        <a asp-action="Create" asp-controller="Weddings" class="btn btn-primary">Setup Wedding</a>
-                    }
-                    </div>
-                </div>
-            </div>
     </div>
 </div>
 

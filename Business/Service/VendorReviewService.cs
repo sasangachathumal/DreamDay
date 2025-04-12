@@ -1,6 +1,7 @@
 ﻿using DreamDay.Business.Interface;
 using DreamDay.Data;
 using DreamDay.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DreamDay.Business.Service
 {
@@ -38,7 +39,10 @@ namespace DreamDay.Business.Service
 
         public List<VendorReviews> GetVendorReviewsByVendorId(int vendorId)
         {
-            throw new NotImplementedException();
+            return _context.VendorReviews
+                .Include(p => p.Vendor)
+                .Where(m => m.VendorID == vendorId)
+                .ToList();
         }
 
         public bool UpdateVendorReview(VendorReviews vendorReview)

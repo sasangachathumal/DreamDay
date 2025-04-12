@@ -16,17 +16,20 @@ namespace DreamDay.Controllers
         private readonly IChecklistItemService _checklistItemService;
         private readonly IGuestService _guestService;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ITimelineService _timelineService;
 
         public ClientController(
             IWeddingService weddingService, 
             SignInManager<ApplicationUser> signInManager,
             IChecklistItemService checklistItemService,
-            IGuestService guestService)
+            IGuestService guestService,
+            ITimelineService timelineService)
         {
             _signInManager = signInManager;
             _weddingService = weddingService;
             _checklistItemService = checklistItemService;
             _guestService = guestService;
+            _timelineService = timelineService;
         }
         public IActionResult Dashboard()
         {
@@ -38,6 +41,7 @@ namespace DreamDay.Controllers
                 HttpContext.Session.SetInt32("WeddingId", wedding.Id);
                 wedding.ChecklistItems = _checklistItemService.GetChecklistItemsByWeddingId(wedding.Id);
                 wedding.Guests = _guestService.GetGuestsByWeddingId(wedding.Id);
+                wedding.Timelines = _timelineService.GetTimelinesByWeddingId(wedding.Id);
             }
 
             return View(wedding);
@@ -55,6 +59,15 @@ namespace DreamDay.Controllers
         public IActionResult MarkAsAttending(int itemId)
         {
             if (_guestService.MarkAsAttending(itemId))
+            {
+                return RedirectToAction("Dashboard");
+            }
+            return View();
+        }
+
+        public IActionResult MarkRimelineAsDone(int itemId)
+        {
+            if (_timelineService.MarkAsDone(itemId))
             {
                 return RedirectToAction("Dashboard");
             }

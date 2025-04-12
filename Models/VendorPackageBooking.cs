@@ -17,8 +17,8 @@ namespace DreamDay.Models
         public bool IsConfirmed { get; set; }
 
         [ForeignKey("WeddingID")]
-        public required Wedding Wedding { get; set; }
+        public Wedding Wedding { get; set; }
         [ForeignKey("VendorPackageID")]
-        public required VendorPackage VendorPackage { get; set; }
+        public VendorPackage VendorPackage { get; set; }
     }
 }

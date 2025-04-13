@@ -152,9 +152,11 @@
                                     <div class="col-md-9">
                                         @if (Model.Planner != null)
                                         {
-                                            <p class="mb-1">@Model.Planner?.FirstName @Model.Planner?.LastName</p>
-                                            <p class="mb-1">@Model.Planner?.Email</p>
-                                            <p class="mb-1">@Model.Planner?.PhoneNumber</p>
+                                            <div class="d-flex gap-2">
+                                                <p class="mb-1">@Model.Planner?.FirstName @Model.Planner?.LastName</p> |
+                                                <p class="mb-1">@Model.Planner?.Email</p> |
+                                                <p class="mb-1">@Model.Planner?.PhoneNumber</p>
+                                            </div>
                                         } else {
                                             <div class="d-flex gap-3">
                                                 <p class="mb-0">Select a planner for your wedding</p>

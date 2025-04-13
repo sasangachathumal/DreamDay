@@ -63,11 +63,6 @@ namespace DreamDay.Business.Service
             }
         }
 
-        public List<VendorPackageBooking> GetAllVendorPackageBookings()
-        {
-            throw new NotImplementedException();
-        }
-
         public VendorPackageBooking GetVendorPackageBookingById(int id)
         {
             if (id == 0)

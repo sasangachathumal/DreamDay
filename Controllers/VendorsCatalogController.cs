@@ -38,25 +38,25 @@ namespace DreamDay.Controllers
 
             if (vendors != null && vendors.Count >0)
             {
-                foreach (var vendor in vendors)
-                {
-                    // Get the vendor's packages
-                    var packages = _vendorPackageService.GetVendorPackageById(vendor.Id);
-                    // Check if packages are not null
-                    if (packages != null)
-                    {
-                        // Assign the packages to the vendor
-                        vendor.VendorPackages = new List<VendorPackage> { packages };
-                    }
-                    // Get the vendor's reviews
-                    var reviews = _vendorReviewService.GetVendorReviewById(vendor.Id);
-                    // Check if reviews are not null
-                    if (reviews != null)
-                    {
-                        // Assign the reviews to the vendor
-                        vendor.VendorReviews = new List<VendorReviews> { reviews };
-                    }
-                }
+                //foreach (var vendor in vendors)
+                //{
+                //    // Get the vendor's packages
+                //    var packages = _vendorPackageService.GetVendorPackageById(vendor.Id);
+                //    // Check if packages are not null
+                //    if (packages != null)
+                //    {
+                //        // Assign the packages to the vendor
+                //        vendor.VendorPackages = new List<VendorPackage> { packages };
+                //    }
+                //    // Get the vendor's reviews
+                //    var reviews = _vendorReviewService.GetVendorReviewById(vendor.Id);
+                //    // Check if reviews are not null
+                //    if (reviews != null)
+                //    {
+                //        // Assign the reviews to the vendor
+                //        vendor.VendorReviews = new List<VendorReviews> { reviews };
+                //    }
+                //}
             }
 
             return View(vendors);

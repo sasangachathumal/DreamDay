@@ -10,6 +10,6 @@ namespace DreamDay.Business.Interface
         Wedding GetWeddingById(int id);
         bool AddWedding(Wedding wedding);
         bool UpdateWedding(Wedding wedding);
-        bool DeleteWedding(int id);
+        bool AssignPlanner(string plannerId, int weddingId);
     }
 }

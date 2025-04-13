@@ -64,11 +64,6 @@ namespace DreamDay.Business.Service
             }
         }
 
-        public List<ChecklistItem> GetAllChecklistItems()
-        {
-            throw new NotImplementedException();
-        }
-
         public ChecklistItem GetChecklistItemById(int id)
         {
             if (id == 0)
@@ -117,16 +112,6 @@ namespace DreamDay.Business.Service
                 // Optionally return an empty list or a specific error code/message
                 return new List<ChecklistItem>();
             }
-        }
-
-        public List<ChecklistItem> GetChecklistItemsOfWeddingByDate(int weddingId, DateTime date)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<ChecklistItem> GetChecklistItemsOfWeddingByStatus(int weddingId, bool isDone)
-        {
-            throw new NotImplementedException();
         }
 
         public bool MarkAsDone(int id)

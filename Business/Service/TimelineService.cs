@@ -64,11 +64,6 @@ namespace DreamDay.Business.Service
             }
         }
 
-        public List<Timeline> GetAllTimelines()
-        {
-            throw new NotImplementedException();
-        }
-
         public Timeline GetTimelineById(int id)
         {
             if (id == 0)
@@ -117,16 +112,6 @@ namespace DreamDay.Business.Service
                 // Optionally return an empty list
                 return new List<Timeline>();
             }
-        }
-
-        public List<Timeline> GetTimelinesOfWeddingByStartTime(int weddingId, DateTime startTime)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Timeline> GetTimelinesOfWeddingByStatus(int weddingId, bool isDone)
-        {
-            throw new NotImplementedException();
         }
 
         public bool MarkAsDone(int id)

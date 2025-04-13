@@ -4,6 +4,7 @@
 
 .sidebar {
     min-height: 100vh;
+    height: auto;
     background-color: #232527;
 }
 .sidebar .nav-link {

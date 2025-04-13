@@ -27,9 +27,32 @@ namespace DreamDay.Business.Service
             }
         }
 
-        public bool DeleteWedding(int id)
+        public bool AssignPlanner(string plannerId, int weddingId)
         {
-            throw new NotImplementedException();
+            if (weddingId == 0)
+            {
+                return false;
+            }
+            try
+            {
+                var wedding = _context.Weddings
+                .FirstOrDefault(m => m.Id == weddingId);
+                if (wedding == null)
+                {
+                    return false;
+                }
+                wedding.PlannerId = plannerId;
+                _context.Update(wedding);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (important for debugging)
+                Console.WriteLine($"Error on getting wedding item: {ex.Message}");
+                // Optionally return false
+                return false;
+            }
         }
 
         public List<Wedding> GetAllWeddings()

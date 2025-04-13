@@ -64,11 +64,6 @@ namespace DreamDay.Business.Service
             }
         }
 
-        public List<Budget> GetAllBudgets()
-        {
-            throw new NotImplementedException();
-        }
-
         public Budget GetBudgetById(int id)
         {
             if (id == 0)
@@ -93,11 +88,6 @@ namespace DreamDay.Business.Service
                 // Optionally return false or a specific error code/message
                 return null;
             }
-        }
-
-        public List<Budget> GetBudgetsByCategory(BudgetCategory budgetCategory)
-        {
-            throw new NotImplementedException();
         }
 
         public List<Budget> GetBudgetsByWeddingId(int weddingId)

@@ -13,9 +13,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 <body>
-    <div class="container-fluid vh-100">
+    <div class="container-fluid h-100">
         <div class="row h-100">
-            <div class="col-md-2 h-100 sidebar">
+            <div class="col-md-2 sidebar">
                 <div class="position-sticky d-flex flex-column flex-shrink-0 p-2 text-bg-dark h-100">
                     <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none text-white fw-bold" asp-area="" asp-controller="Home" asp-action="Index">
                         <span class="fs-4">DreamDay</span>
@@ -28,30 +28,19 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#vendorSubmenu" aria-expanded="false">
-                                <span><i class="bi bi-shop me-2"></i> Vendor</span>
-                                <i class="bi bi-chevron-down"></i>
+                            <a class="nav-link" asp-area="" asp-controller="Vendor" asp-action="VendorCategoryList">
+                                <i class="bi bi-person-plus me-2"></i> Vendor Category List
                             </a>
-                            <ul class="collapse list-unstyled ps-3" id="vendorSubmenu">
-                                <li>
-                                    <a class="nav-link" asp-area="" asp-controller="Vendor" asp-action="VendorCategoryList">
-                                        <i class="bi bi-person-plus me-2"></i> Vendor Category List
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="nav-link" asp-area="" asp-controller="Vendor" asp-action="VendorList">
-                                        <i class="bi bi-pencil-square me-2"></i>  Vendor List
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="nav-link" asp-area="" asp-controller="Vendor" asp-action="PackageList">
-                                        <i class="bi bi-pencil-square me-2"></i> Package List
-                                    </a>
-                                </li>
-
-                              
-
-                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Vendor" asp-action="VendorList">
+                                <i class="bi bi-pencil-square me-2"></i>  Vendor List
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Vendor" asp-action="PackageList">
+                                <i class="bi bi-pencil-square me-2"></i> Package List
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="UserManage" asp-action="ManageUsers">

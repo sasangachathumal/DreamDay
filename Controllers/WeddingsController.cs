@@ -152,39 +152,28 @@ namespace DreamDay.Controllers
         }
 
         // GET: Weddings/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> SelectPlanner()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var wedding = await _context.Weddings
-                .Include(w => w.Client)
-                .Include(w => w.Planner)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (wedding == null)
-            {
-                return NotFound();
-            }
-
-            return View(wedding);
+            var planners = await _userManager.GetUsersInRoleAsync("Planner");
+            return View(planners);
         }
 
-        // POST: Weddings/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> AssignPllaner(string id)
         {
-            var wedding = await _context.Weddings.FindAsync(id);
-            if (wedding != null)
+            int _WeddingId = 0;
+            var sessionWeddingId = HttpContext.Session.GetInt32("WeddingId");
+            if (sessionWeddingId.HasValue)
             {
-                _context.Weddings.Remove(wedding);
+                _WeddingId = sessionWeddingId.Value;
             }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            else
+            {
+                _WeddingId = 0;
+            }
+            _weddingService.AssignPlanner(id, _WeddingId);
+            return RedirectToAction("Dashboard", "Client");
         }
+
 
         private bool WeddingExists(int id)
         {

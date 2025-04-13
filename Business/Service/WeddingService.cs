@@ -34,7 +34,10 @@ namespace DreamDay.Business.Service
 
         public List<Wedding> GetAllWeddings()
         {
-            throw new NotImplementedException();
+            return _context.Weddings
+                .Include(w => w.Client)   // Include related client
+                .Include(w => w.Planner)  // Include related planner
+                .ToList();
         }
 
         public List<Wedding> GetWeddingByClientId(string clientId)

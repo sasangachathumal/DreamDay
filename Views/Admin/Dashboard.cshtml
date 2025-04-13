@@ -1,9 +1,50 @@
-﻿
-@{
+﻿@{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = "Admin Dashboard";
 }
 
-<h1>Dashboard</h1>
+<h1 class="mb-4">Admin Dashboard</h1>
 
-<a href="c:\project\dreamday\views\admin\dashboard.cshtml">c:\project\dreamday\views\admin\dashboard.cshtml</a>
+<div class="row g-4">
+    <div class="col-md-3">
+        <div class="card bg-light p-3 text-center shadow-sm">
+            <h4>Total Vendors</h4>
+            <p class="fw-bold display-6">@ViewBag.TotalVendors</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-light p-3 text-center shadow-sm">
+            <h4>Total Users</h4>
+            <p class="fw-bold display-6">@ViewBag.TotalUsers</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-light p-3 text-center shadow-sm">
+            <h4>Total Planners</h4>
+            <p class="fw-bold display-6">@ViewBag.TotalPlanners</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-light p-3 text-center shadow-sm">
+            <h4>Completed Weddings</h4>
+            <p class="fw-bold display-6">@ViewBag.CompletedWeddings</p>
+        </div>
+    </div>
+</div>
+
+<h3 class="mt-5">Top Vendors</h3>
+<div class="row mt-3">
+    @foreach (var vendor in ViewBag.TopVendors as List<DreamDay.Models.Vendor>)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@vendor.Name</h5>
+                    <p class="card-text">@vendor.Email</p>
+                    <p class="card-text text-muted">@vendor.Phone</p>
+                    <p class="card-text">@vendor.Description</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>

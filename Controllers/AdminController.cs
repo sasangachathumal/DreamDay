@@ -1,4 +1,6 @@
-﻿using DreamDay.Models;
+﻿using DreamDay.Business.Interface;
+using DreamDay.Data;
+using DreamDay.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,28 +11,39 @@ namespace DreamDay.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
+        private readonly IVendorService _vendorService;
         private readonly UserManager<ApplicationUser> _userManager;
-        public AdminController(UserManager<ApplicationUser> userManager)
+        private readonly ApplicationDbContext _context;
+
+        public AdminController(IVendorService vendorService, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
+            _vendorService = vendorService;
             _userManager = userManager;
+            _context = context;
         }
-        public IActionResult Dashboard()
+
+        public async Task<IActionResult> Dashboard()
         {
+            var allUsers = await _userManager.Users.ToListAsync();
+
+            var totalVendors = _vendorService.GetAllVendors().Count;
+            var totalUsers = allUsers.Count(u => !_userManager.IsInRoleAsync(u, "Admin").Result);
+            var totalPlanners = allUsers.Count(u => _userManager.IsInRoleAsync(u, "Planner").Result);
+
+            var totalWeddings = await _context.Weddings.CountAsync(); // ← updated line
+
+            var topVendors = _vendorService.GetAllVendors()
+                                .OrderByDescending(v => v.VendorPackages?.Count)
+                                .Take(3)
+                                .ToList();
+
+            ViewBag.TotalVendors = totalVendors;
+            ViewBag.TotalUsers = totalUsers;
+            ViewBag.TotalPlanners = totalPlanners;
+            ViewBag.TotalWeddings = totalWeddings; // ← updated ViewBag
+            ViewBag.TopVendors = topVendors;
+
             return View();
-        }
-
-        public async Task<IActionResult> ManageUsers()
-        {
-            var users = await _userManager.Users.ToListAsync();
-            var userList = new List<(ApplicationUser user, string role)>();
-
-            foreach (var u in users)
-            {
-                var roles = await _userManager.GetRolesAsync(u);
-                userList.Add((u, roles.FirstOrDefault() ?? "N/A"));
-            }
-
-            return View(userList); ;
         }
 
     }

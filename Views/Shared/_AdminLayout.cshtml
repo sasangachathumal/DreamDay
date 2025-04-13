@@ -49,10 +49,12 @@
                                     </a>
                                 </li>
 
+                              
+
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="ManageUsers">
+                            <a class="nav-link" asp-area="" asp-controller="UserManage" asp-action="ManageUsers">
                                 <i class="bi bi-people me-2"></i> Manage Users
                             </a>
                         </li>
@@ -61,11 +63,13 @@
                                 <i class="bi bi-box me-2"></i> Vendor Reviews
                             </a>
                         </li>
+
                         <li>
-                            <a href="#" class="nav-link">
-                                <i class="bi bi-person me-2"></i> Customers
+                            <a class="nav-link" asp-controller="Report" asp-action="ReportAndAnalysis">
+                                <i class="bi bi-pencil-square me-2"></i> Report and Analysis
                             </a>
                         </li>
+
                         
                     </ul>
                     <hr>

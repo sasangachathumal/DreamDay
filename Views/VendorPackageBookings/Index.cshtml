@@ -54,7 +54,7 @@
                                 <div class="col-md-6 d-grid">
                                     @if (item.IsConfirmed)
                                     {
-                                        <button disabled class="btn btn-success mt-2">Confirmed</button>
+                                        <a class="btn btn-success mt-2" asp-action="Create" asp-controller="VendorReviews" asp-route-vendorId="@item.VendorPackage?.VendorId">Provide Review</a>
                                     }
                                     else 
                                     {

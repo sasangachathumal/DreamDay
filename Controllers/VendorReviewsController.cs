@@ -47,10 +47,9 @@ namespace DreamDay.Controllers
         }
 
         // GET: VendorReviews/Create
-        public IActionResult Create()
+        public IActionResult Create(int vendorId)
         {
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["VendorID"] = new SelectList(_context.Vendors, "Id", "Address");
+            ViewData["VendorID"] = vendorId;
             return View();
         }
 
@@ -61,69 +60,15 @@ namespace DreamDay.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,UserID,VendorID,Message,Rating,date")] VendorReviews vendorReviews)
         {
+            ModelState.Remove("date");
+            ModelState.Remove("UserID");
+            ModelState.Remove("VendorID");
             if (ModelState.IsValid)
             {
                 _context.Add(vendorReviews);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "VendorPackageBookings");
             }
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", vendorReviews.UserID);
-            ViewData["VendorID"] = new SelectList(_context.Vendors, "Id", "Address", vendorReviews.VendorID);
-            return View(vendorReviews);
-        }
-
-        // GET: VendorReviews/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var vendorReviews = await _context.VendorReviews.FindAsync(id);
-            if (vendorReviews == null)
-            {
-                return NotFound();
-            }
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", vendorReviews.UserID);
-            ViewData["VendorID"] = new SelectList(_context.Vendors, "Id", "Address", vendorReviews.VendorID);
-            return View(vendorReviews);
-        }
-
-        // POST: VendorReviews/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserID,VendorID,Message,Rating,date")] VendorReviews vendorReviews)
-        {
-            if (id != vendorReviews.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(vendorReviews);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!VendorReviewsExists(vendorReviews.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", vendorReviews.UserID);
-            ViewData["VendorID"] = new SelectList(_context.Vendors, "Id", "Address", vendorReviews.VendorID);
             return View(vendorReviews);
         }
 
@@ -160,11 +105,6 @@ namespace DreamDay.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool VendorReviewsExists(int id)
-        {
-            return _context.VendorReviews.Any(e => e.Id == id);
         }
     }
 }

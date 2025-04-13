@@ -92,6 +92,16 @@ namespace DreamDay.Controllers
             return View(vendor);
         }
 
+        public async Task<IActionResult> BookedVendorReview(Vendor vendor)
+        {
+            if (vendor != null)
+            {
+                vendor.VendorReviews = _vendorReviewService.GetVendorReviewsByVendorId(vendor.Id);
+            }
+
+            return View(vendor);
+        }
+
         public async Task<IActionResult> PackageView(Vendor vendor)
         {
             if (vendor != null)

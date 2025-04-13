@@ -1,0 +1,106 @@
+﻿@{
+    ViewBag.Title = "Reports & Analysis";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="mb-4 text-2xl font-bold">Vendor & Wedding Analysis</h2>
+
+<div class="grid md:grid-cols-2 gap-6">
+    <!-- Vendor Bar Chart -->
+    <div class="bg-white p-4 rounded shadow">
+        <h4 class="font-semibold mb-2 text-gray-700">Vendors by Category (Bar)</h4>
+        <div class="h-[180px]">
+            <canvas id="vendorChart" class="w-full h-full"></canvas>
+        </div>
+        <a class="btn btn-success mt-3 inline-block" href="@Url.Action("ExportVendorExcel", "Report")">Download Vendor Report</a>
+    </div>
+
+    <!-- Vendor Pie Chart -->
+    <div class="bg-white p-4 rounded shadow">
+        <h4 class="font-semibold mb-2 text-gray-700">Vendors by Category (Pie)</h4>
+        <div class="h-[180px]">
+            <canvas id="vendorPieChart" class="w-full h-full"></canvas>
+        </div>
+    </div>
+
+    <!-- Wedding Line Chart -->
+    <div class="bg-white p-4 rounded shadow md:col-span-2">
+        <h4 class="font-semibold mb-2 text-gray-700">Weddings per Month</h4>
+        <div class="h-[220px]">
+            <canvas id="weddingChart" class="w-full h-full"></canvas>
+        </div>
+        <a class="btn btn-primary mt-3 inline-block" href="@Url.Action("ExportWeddingExcel", "Report")">Download Wedding Report</a>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const vendorData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.VendorChartData));
+        const weddingData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.WeddingChartData));
+
+        const vendorLabels = vendorData.map(x => x.Category);
+        const vendorCounts = vendorData.map(x => x.Count);
+
+        // Vendor Bar Chart
+        new Chart(document.getElementById('vendorChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: vendorLabels,
+                datasets: [{
+                    label: '# of Vendors',
+                    data: vendorCounts,
+                    backgroundColor: 'rgba(131, 8, 35, 0.7)',
+                    barThickness: 20 // smaller bars
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // Vendor Pie Chart
+        new Chart(document.getElementById('vendorPieChart').getContext('2d'), {
+            type: 'pie',
+            data: {
+                labels: vendorLabels,
+                datasets: [{
+                    data: vendorCounts,
+                    backgroundColor: [
+                        '#830823', '#F59E0B', '#10B981',
+                        '#3B82F6', '#8B5CF6', '#EC4899', '#F87171'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        // Wedding Line Chart
+        const weddingLabels = weddingData.map(x => x.Month);
+        const weddingCounts = weddingData.map(x => x.Count);
+
+        new Chart(document.getElementById('weddingChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: weddingLabels,
+                datasets: [{
+                    label: '# of Weddings',
+                    data: weddingCounts,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    </script>
+}

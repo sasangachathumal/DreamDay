@@ -20,6 +20,8 @@ namespace DreamDay.Controllers
         private readonly IVendorService _vendorService;
         private readonly IVendorImageService _vendorImageService;
         private readonly IVendorReviewService _vendorReviewService;
+        private readonly IBudgetService _budgetService;
+        private readonly IVendorCategoryService _vendorCategoryService;
 
         public VendorPackageBookingsController(
             ApplicationDbContext context, 
@@ -28,7 +30,9 @@ namespace DreamDay.Controllers
             IVendorPackageService vendorPackageService,
             IVendorService vendorService,
             IVendorImageService vendorImageService,
-            IVendorReviewService vendorReviewService)
+            IVendorReviewService vendorReviewService,
+            IBudgetService budgetService,
+            IVendorCategoryService vendorCategoryService)
         {
             _context = context;
             _vendorPackageBookingService = vendorPackageBookingService;
@@ -37,6 +41,8 @@ namespace DreamDay.Controllers
             _vendorService = vendorService;
             _vendorImageService = vendorImageService;
             _vendorReviewService = vendorReviewService;
+            _budgetService = budgetService;
+            _vendorCategoryService = vendorCategoryService;
         }
 
         // GET: VendorPackageBookings
@@ -116,9 +122,9 @@ namespace DreamDay.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Book(int vendorPackageId)
+        public async Task<IActionResult> Book(int vendorPackageId, int vendorId)
         {
-            if (vendorPackageId != 0)
+            if (vendorPackageId != 0 && vendorId != 0)
             {
                 int _WeddingId = 0;
                 var sessionWeddingId = HttpContext.Session.GetInt32("WeddingId");
@@ -132,15 +138,34 @@ namespace DreamDay.Controllers
                 }
 
                 var wedding = _weddingService.GetWeddingById(_WeddingId);
+                var vendor = _vendorService.GetVendorById(vendorId);
+                var weddingBudget = _budgetService.GetBudgetsByWeddingId(wedding.Id);
+                var vendorPackage = _vendorPackageService.GetVendorPackageById(vendorPackageId);
 
-                var packageBooking = new VendorPackageBooking
+                if (vendor != null)
                 {
-                    VendorPackageID = vendorPackageId,
-                    WeddingID = wedding.Id,
-                    BookDate = wedding.WeddingDate
-                };
+                    vendor.VendorCategory = _vendorCategoryService.GetVendorCategoryById(vendor.VendorCategoryId);
+                    var packageBooking = new VendorPackageBooking
+                    {
+                        VendorPackageID = vendorPackageId,
+                        WeddingID = wedding.Id,
+                        BookDate = wedding.WeddingDate
+                    };
 
-                _vendorPackageBookingService.AddVendorPackageBooking(packageBooking);
+                    if (weddingBudget != null)
+                    {
+                        foreach (var item in weddingBudget)
+                        {
+                            if (item.Category.ToString() == vendor.VendorCategory.Name)
+                            {
+                                item.SpendAmount += vendorPackage.Price;
+                                _budgetService.UpdateBudget(item);
+                            }
+                        }
+                    }
+
+                    _vendorPackageBookingService.AddVendorPackageBooking(packageBooking);
+                }
 
                 return RedirectToAction(nameof(Index));
             }

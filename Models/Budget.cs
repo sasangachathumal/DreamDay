@@ -13,8 +13,8 @@ namespace DreamDay.Models
         [Required]
         public BudgetCategory Category { get; set; }
         [Required]
-        public double AllocatedAmount { get; set; }
-        public double? SpendAmount { get; set; }
+        public decimal AllocatedAmount { get; set; }
+        public decimal? SpendAmount { get; set; }
 
         [ForeignKey("WeddingId")]
         public required Wedding Wedding { get; set; }

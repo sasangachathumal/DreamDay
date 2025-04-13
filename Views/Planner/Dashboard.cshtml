@@ -3,56 +3,54 @@
     Layout = "~/Views/Shared/_PlannerLayout.cshtml";
     ViewData["Title"] = "Dashboard";
 }
-@model List<Wedding>
+@model IEnumerable<DreamDay.Models.Wedding>
 <div class="container-fluid">
     <h1>Planner Dashboard</h1>
     <p>This is where you can manage wedding plans and tasks.</p>
     
     <div class="row">
-        <div class="col-md-3">
-            <div class="card table-card">
-                <div class="card-header">
-                    <h3>Wedding List</h3>
-                </div>
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Client</th>
-                                <th scope="col">Date</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model != null && Model.Count > 0)
-                            {
-                                @foreach (Wedding item in Model)
-                                {
-                                    <tr>
-                                        <td>@item.Client.FirstName @item.Client.LastName</td>
-                                        <td>@item.WeddingDate.ToString("MM/dd/yyyy")</td>
-                                        <td>
-                                            <form method="post" asp-action="MarkAsDone" asp-controller="Client">
-                                                <input type="hidden" name="itemId" value="@item.Id" />
-                                                <button type="submit" class="btn btn-sm btn-outline-primary">📄 View</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="4" class="text-center">No ToDo items found.</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8">
-
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.WeddingDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TotalGuests)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FullBudget)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Client)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @item.WeddingDate.ToString("MM/dd/yyyy")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalGuests)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FullBudget)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Client.FullName)
+                            </td>
+                            <td>
+                                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Id">View Details</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

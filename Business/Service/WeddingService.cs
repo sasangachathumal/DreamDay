@@ -93,6 +93,13 @@ namespace DreamDay.Business.Service
             try
             {
                 var wedding = _context.Weddings
+                    .Include(w => w.Client)
+                .Include(w => w.Planner)
+                .Include(w => w.ChecklistItems)
+                .Include(w => w.Guests)
+                .Include(w => w.Timelines)
+                .Include(w => w.Budgets)
+                .Include(w => w.VendorPackageBookings)
                 .FirstOrDefault(m => m.Id == id);
                 if (wedding == null)
                 {

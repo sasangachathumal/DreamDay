@@ -4,9 +4,6 @@
     Catering,
     Photography,
     Videography,
-    Music,
-    Flowers,
-    Cake,
     Invitations,
     Transportation,
     Rentals,
@@ -16,5 +13,12 @@
     WeddingPlanner,
     Officiant,
     Gifts,
-    Miscellaneous
+    Miscellaneous,
+    Florist,
+    Entertainment,
+    DressDesigner,
+    CakeBaker,
+    Decorator,
+    MusicBand,
+    JewelryDesigner
 }

@@ -52,6 +52,7 @@
                         <td>
                             <form asp-action="Book" class="d-grid">
                                 <input type="hidden" name="vendorPackageId" value="@item.Id" />
+                                <input type="hidden" name="vendorId" value="@Model.Id" />
                                 <input type="submit" value="Book" class="btn btn-success" />
                             </form>
                         </td>

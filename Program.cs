@@ -2,6 +2,7 @@ using DreamDay.Business.Interface;
 using DreamDay.Business.Service;
 using DreamDay.Data;
 using DreamDay.Models;
+using DreamDay.Models.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -58,8 +59,29 @@ else
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ApplicationDbContext>();
+
+    // Ensure database is created
+    context.Database.EnsureCreated();
+
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+    var vendorCategories = Enum.GetValues(typeof(BudgetCategory)).Cast<BudgetCategory>();
+    Console.WriteLine(typeof(BudgetCategory).IsEnum);
+
+    foreach (var category in vendorCategories)
+    {
+        if (!context.VendorCategories.Any(vc => vc.Name == category.ToString()))
+        {
+            context.VendorCategories.Add(new DreamDay.Models.VendorCategory
+            {
+                Name = category.ToString()
+            });
+        }
+    }
+
+    await context.SaveChangesAsync();
 
     await SeedRolesAsync(userManager, roleManager);
 }

@@ -14,19 +14,31 @@ namespace DreamDay.Controllers
         private readonly IGuestService _guestService;
         private readonly ITimelineService _timelineService;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IVendorService _vendorService;
+        private readonly IVendorPackageService _vendorPackageService;
+        private readonly IVendorPackageBookingService _vendorPackageBookingService;
+        private readonly IVendorCategoryService _vendorCategoryService;
 
         public PlannerController(
             IWeddingService weddingService,
             SignInManager<ApplicationUser> signInManager,
             IChecklistItemService checklistItemService,
             IGuestService guestService,
-            ITimelineService timelineService)
+            ITimelineService timelineService,
+            IVendorService vendorService,
+            IVendorPackageService vendorPackageService,
+            IVendorPackageBookingService vendorPackageBookingService,
+            IVendorCategoryService vendorCategoryService)
         {
             _signInManager = signInManager;
             _weddingService = weddingService;
             _checklistItemService = checklistItemService;
             _guestService = guestService;
             _timelineService = timelineService;
+            _vendorService = vendorService;
+            _vendorPackageService = vendorPackageService;
+            _vendorPackageBookingService = vendorPackageBookingService;
+            _vendorCategoryService = vendorCategoryService;
         }
         public IActionResult Dashboard()
         {
@@ -47,7 +59,29 @@ namespace DreamDay.Controllers
                     wedding.Timelines = _timelineService.GetTimelinesByWeddingId(wedding.Id);
                 }
             }
+
             return View(weddings);
+        }
+
+        public IActionResult Details(int id)
+        {
+            if (id == 0)
+            {
+                return NotFound();
+            }
+
+            var wedding = _weddingService.GetWeddingById(id);
+            if (wedding == null)
+            {
+                return NotFound();
+            }
+            foreach (var booking in wedding?.VendorPackageBookings)
+            {
+                booking.VendorPackage = _vendorPackageService.GetVendorPackageById(booking.VendorPackageID);
+                booking.VendorPackage.Vendor.VendorCategory = _vendorCategoryService.GetVendorCategoryById(booking.VendorPackage.Vendor.VendorCategoryId);
+            }
+
+            return View(wedding);
         }
     }
 }

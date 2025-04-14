@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DreamDay.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250331144328_init")]
-    partial class init
+    [Migration("20250412052727_weddingEdit")]
+    partial class weddingEdit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,39 +24,6 @@ namespace DreamDay.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
-
-            modelBuilder.Entity("DreamDay.Models.AppImages", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ImageCategory")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ImageURL")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("RelatedId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("VendorId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("VendorPackageId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("VendorId");
-
-                    b.HasIndex("VendorPackageId");
-
-                    b.ToTable("AppImages");
-                });
 
             modelBuilder.Entity("DreamDay.Models.ApplicationUser", b =>
                 {
@@ -313,6 +280,28 @@ namespace DreamDay.Migrations
                     b.ToTable("VendorCategories");
                 });
 
+            modelBuilder.Entity("DreamDay.Models.VendorImages", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ImageURL")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("VendorId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VendorId");
+
+                    b.ToTable("VendorImages");
+                });
+
             modelBuilder.Entity("DreamDay.Models.VendorPackage", b =>
                 {
                     b.Property<int>("Id")
@@ -419,7 +408,6 @@ namespace DreamDay.Migrations
                         .HasColumnType("double");
 
                     b.Property<string>("PlannerId")
-                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.Property<int>("TotalGuests")
@@ -573,17 +561,6 @@ namespace DreamDay.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("DreamDay.Models.AppImages", b =>
-                {
-                    b.HasOne("DreamDay.Models.Vendor", null)
-                        .WithMany("AppImages")
-                        .HasForeignKey("VendorId");
-
-                    b.HasOne("DreamDay.Models.VendorPackage", null)
-                        .WithMany("AppImages")
-                        .HasForeignKey("VendorPackageId");
-                });
-
             modelBuilder.Entity("DreamDay.Models.Budget", b =>
                 {
                     b.HasOne("DreamDay.Models.Wedding", "Wedding")
@@ -639,6 +616,17 @@ namespace DreamDay.Migrations
                     b.Navigation("VendorCategory");
                 });
 
+            modelBuilder.Entity("DreamDay.Models.VendorImages", b =>
+                {
+                    b.HasOne("DreamDay.Models.Vendor", "Vendor")
+                        .WithMany("VendorImages")
+                        .HasForeignKey("VendorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Vendor");
+                });
+
             modelBuilder.Entity("DreamDay.Models.VendorPackage", b =>
                 {
                     b.HasOne("DreamDay.Models.Vendor", "Vendor")
@@ -653,13 +641,13 @@ namespace DreamDay.Migrations
             modelBuilder.Entity("DreamDay.Models.VendorPackageBooking", b =>
                 {
                     b.HasOne("DreamDay.Models.VendorPackage", "VendorPackage")
-                        .WithMany()
+                        .WithMany("VendorPackageBookings")
                         .HasForeignKey("VendorPackageID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("DreamDay.Models.Wedding", "Wedding")
-                        .WithMany()
+                        .WithMany("VendorPackageBookings")
                         .HasForeignKey("WeddingID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -678,7 +666,7 @@ namespace DreamDay.Migrations
                         .IsRequired();
 
                     b.HasOne("DreamDay.Models.Vendor", "Vendor")
-                        .WithMany()
+                        .WithMany("VendorReviews")
                         .HasForeignKey("VendorID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -698,9 +686,7 @@ namespace DreamDay.Migrations
 
                     b.HasOne("DreamDay.Models.ApplicationUser", "Planner")
                         .WithMany()
-                        .HasForeignKey("PlannerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PlannerId");
 
                     b.Navigation("Client");
 
@@ -760,14 +746,16 @@ namespace DreamDay.Migrations
 
             modelBuilder.Entity("DreamDay.Models.Vendor", b =>
                 {
-                    b.Navigation("AppImages");
+                    b.Navigation("VendorImages");
 
                     b.Navigation("VendorPackages");
+
+                    b.Navigation("VendorReviews");
                 });
 
             modelBuilder.Entity("DreamDay.Models.VendorPackage", b =>
                 {
-                    b.Navigation("AppImages");
+                    b.Navigation("VendorPackageBookings");
                 });
 
             modelBuilder.Entity("DreamDay.Models.Wedding", b =>
@@ -779,6 +767,8 @@ namespace DreamDay.Migrations
                     b.Navigation("Guests");
 
                     b.Navigation("Timelines");
+
+                    b.Navigation("VendorPackageBookings");
                 });
 #pragma warning restore 612, 618
         }

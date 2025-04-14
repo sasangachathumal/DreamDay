@@ -3,6 +3,7 @@ using DreamDay.Business.Service;
 using DreamDay.Data;
 using DreamDay.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,38 +16,35 @@ namespace DreamDay.Controllers
         private readonly IChecklistItemService _checklistItemService;
         private readonly IGuestService _guestService;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ITimelineService _timelineService;
 
         public ClientController(
             IWeddingService weddingService, 
             SignInManager<ApplicationUser> signInManager,
             IChecklistItemService checklistItemService,
-            IGuestService guestService)
+            IGuestService guestService,
+            ITimelineService timelineService)
         {
             _signInManager = signInManager;
             _weddingService = weddingService;
             _checklistItemService = checklistItemService;
             _guestService = guestService;
+            _timelineService = timelineService;
         }
         public IActionResult Dashboard()
         {
             var SignedInUser = _signInManager.UserManager.GetUserAsync(User).Result;
-            var weddings = _weddingService.GetWeddingByClientId(SignedInUser?.Id);
+            var wedding = _weddingService.GetWeddingByClientId(SignedInUser?.Id);
 
-            if (weddings == null)
+            if (wedding != null)
             {
-                return NotFound();
+                HttpContext.Session.SetInt32("WeddingId", wedding.Id);
+                wedding.ChecklistItems = _checklistItemService.GetChecklistItemsByWeddingId(wedding.Id);
+                wedding.Guests = _guestService.GetGuestsByWeddingId(wedding.Id);
+                wedding.Timelines = _timelineService.GetTimelinesByWeddingId(wedding.Id);
             }
 
-            if (weddings.Count > 0)
-            {
-                foreach (var wedding in weddings)
-                {
-                    wedding.ChecklistItems = _checklistItemService.GetChecklistItemsByWeddingId(wedding.Id);
-                    wedding.Guests = _guestService.GetGuestsByWeddingId(wedding.Id);
-                }
-            }
-
-            return View(weddings);
+            return View(wedding);
         }
 
         public IActionResult MarkAsDone(int itemId)
@@ -61,6 +59,15 @@ namespace DreamDay.Controllers
         public IActionResult MarkAsAttending(int itemId)
         {
             if (_guestService.MarkAsAttending(itemId))
+            {
+                return RedirectToAction("Dashboard");
+            }
+            return View();
+        }
+
+        public IActionResult MarkRimelineAsDone(int itemId)
+        {
+            if (_timelineService.MarkAsDone(itemId))
             {
                 return RedirectToAction("Dashboard");
             }

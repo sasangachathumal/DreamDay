@@ -1,0 +1,46 @@
+﻿@model List<DreamDay.Models.Vendor>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Vendor List";
+}
+
+<h2 class="text-2xl font-semibold mb-4">Vendor List</h2>
+<div class="d-flex justify-content-between mb-3">
+    <h4>Vendor List</h4>
+    <a href="@Url.Action("VendorAdd", "Vendor")" class="btn btn-primary">+ Add New Vendor</a>
+</div>
+
+<table class="table table-bordered table-striped w-full">
+    <thead class="bg-gray-200">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var vendor in Model)
+        {
+            <tr>
+                <td>@vendor.Id</td>
+                <td>@vendor.Name</td>
+                <td>@vendor.VendorCategory?.Name</td>
+                <td>@vendor.Email</td>
+                <td>@vendor.Phone</td>
+                <td>@vendor.Address</td>
+                <td>@vendor.Description</td>
+                <td>
+                    <a asp-route-vendorId="@vendor.Id" asp-controller="VendorImages" asp-action="Index" class="btn btn-sm btn-primary">Image List</a>
+                    <a asp-action="EditVendor" asp-route-id="@vendor.Id" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-action="DeleteVendor" asp-route-id="@vendor.Id" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this vendor?');">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

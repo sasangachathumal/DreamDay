@@ -1,0 +1,94 @@
+﻿@{
+    Layout = "~/Views/Shared/_PlannerLayout.cshtml";
+    ViewData["Title"] = "Reports";
+}
+@model IEnumerable<DreamDay.Models.VendorPackageBooking>
+<div class="container-fluid">
+    <h1>Reports</h1>
+
+    <div class="row mt-2">
+
+        <div class="col-md-6">
+            <div class="card table-card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h3>Top Vendor List</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Vendor Name</th>
+                                <th scope="col">Package Name</th>
+                                <th scope="col">Price</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.topBookingPackages != null)
+                            {
+                                foreach (var item in ViewBag.topBookingPackages)
+                                {
+                                    <tr>
+                                        <td>@item.VendorPackage?.Vendor?.Name</td>
+                                        <td>@item.VendorPackage?.Name</td>
+                                        <td>@item.VendorPackage?.Price.ToString("C", new System.Globalization.CultureInfo("en-LK"))</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center">No Data found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card table-card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3>Avarage Budget Amounts by Category</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Category Name</th>
+                                <th scope="col">Avarage Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.averageBudgets != null)
+                            {
+                                foreach (var item in ViewBag.averageBudgets)
+                                {
+                                    <tr>
+                                        <td>@item.Category</td>
+                                        <td>@item.AverageAmount.ToString("C", new System.Globalization.CultureInfo("en-LK"))</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center">No Data found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

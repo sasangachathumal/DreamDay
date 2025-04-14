@@ -2,6 +2,7 @@ using DreamDay.Business.Interface;
 using DreamDay.Business.Service;
 using DreamDay.Data;
 using DreamDay.Models;
+using DreamDay.Models.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +18,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddScoped<IAppImageService, AppImageService>();
+builder.Services.AddScoped<IVendorImageService, VendorImageService>();
 builder.Services.AddScoped<IBudgetService, BudgetService>();
 builder.Services.AddScoped<IChecklistItemService, ChecklistItemService>();
 builder.Services.AddScoped<IGuestService, GuestService>();
@@ -58,8 +59,29 @@ else
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ApplicationDbContext>();
+
+    // Ensure database is created
+    context.Database.EnsureCreated();
+
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+    var vendorCategories = Enum.GetValues(typeof(BudgetCategory)).Cast<BudgetCategory>();
+    Console.WriteLine(typeof(BudgetCategory).IsEnum);
+
+    foreach (var category in vendorCategories)
+    {
+        if (!context.VendorCategories.Any(vc => vc.Name == category.ToString()))
+        {
+            context.VendorCategories.Add(new DreamDay.Models.VendorCategory
+            {
+                Name = category.ToString()
+            });
+        }
+    }
+
+    await context.SaveChangesAsync();
 
     await SeedRolesAsync(userManager, roleManager);
 }
@@ -93,6 +115,7 @@ async Task SeedRolesAsync(UserManager<ApplicationUser> userManager, RoleManager<
 
     string adminEmail = "admin@admin.com";
     string clientEmail = "client@client.com";
+    string clientTwoEmail = "clientTwo@client.com";
     string plannerEmail = "planner@plannert.com";
     string password = "Pass@123";
 
@@ -129,6 +152,23 @@ async Task SeedRolesAsync(UserManager<ApplicationUser> userManager, RoleManager<
         if (result.Succeeded)
         {
             await userManager.AddToRoleAsync(clientUser, "Client");
+        }
+    }
+
+    var clientUser2 = await userManager.FindByEmailAsync(clientTwoEmail);
+    if (clientUser2 == null)
+    {
+        clientUser2 = new ApplicationUser
+        {
+            UserName = clientTwoEmail,
+            Email = clientTwoEmail,
+            FirstName = "Client",
+        };
+
+        var result = await userManager.CreateAsync(clientUser2, password);
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(clientUser2, "Client");
         }
     }
 

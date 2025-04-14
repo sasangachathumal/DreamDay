@@ -21,10 +21,10 @@ namespace DreamDay.Models
         public required string Address { get; set; }
 
         [ForeignKey("VendorCategoryId")]
-        public required VendorCategory VendorCategory { get; set; }
+        public  VendorCategory? VendorCategory { get; set; }
         
         public ICollection<VendorPackage>? VendorPackages { get; set; }
-
-        public ICollection<AppImages>? AppImages { get; set; }
+        public ICollection<VendorReviews>? VendorReviews { get; set; }
+        public ICollection<VendorImages>? VendorImages { get; set; }
     }
 }

@@ -4,9 +4,9 @@
 
 .sidebar {
     min-height: 100vh;
+    height: auto;
     background-color: #232527;
 }
-
 .sidebar .nav-link {
     color: #fff;
     border-radius: 8px;
@@ -19,4 +19,10 @@
 .sidebar .nav-link.active {
     font-weight: bold;
     background-color: #3a3a3b;
+}
+
+.vender-image {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    height: 350px;
 }

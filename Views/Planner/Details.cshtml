@@ -1,0 +1,222 @@
+﻿@model DreamDay.Models.Wedding
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_PlannerLayout.cshtml";
+}
+
+<h1>Wedding Details</h1>
+
+<div class="mt-2 d-flex gap-4">
+    <div>
+        Client | @Html.DisplayFor(model => model.Client.FullName)
+    </div>
+    <div>
+        Wedding Date | @Model.WeddingDate.ToString("MM/dd/yyyy")
+    </div>
+    <div>
+        Client Phone | @Model.Client.PhoneNumber
+    </div>
+</div>
+
+<div class="row mt-2">
+
+    <div class="col-md-6">
+        <div class="card table-card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h3>Wedding ToDo List</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Title</th>
+                            <th scope="col">Desciprion</th>
+                            <th scope="col">Due At</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.ChecklistItems != null)
+                        {
+                            @foreach (ChecklistItem item in Model.ChecklistItems)
+                            {
+                                @if (!item.IsDone)
+                                {
+                                    <tr>
+                                        <td>@item.Title</td>
+                                        <td>@item.Description</td>
+                                        <td>@item.DateTime.ToString("MM/dd/yyyy hh:mm:ss tt")</td>
+                                        <td>
+                                            <form method="post" asp-action="MarkAsDone" asp-controller="Client">
+                                                <input type="hidden" name="itemId" value="@item.Id" />
+                                                <button type="submit" class="btn btn-sm btn-outline-success">✅ Mark Done</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center">No ToDo items found.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card table-card mt-5">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h3>Wedding Timeline</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Title</th>
+                            <th scope="col">Start Time</th>
+                            <th scope="col">End Time</th>
+                            <th scope="col">Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Timelines != null)
+                        {
+                            @foreach (Timeline item in Model.Timelines)
+                            {
+                                <tr>
+                                    <td>@item.Title</td>
+                                    <td>@item.StartTime.ToString("MM/dd/yyyy hh:mm:ss tt")</td>
+                                    <td>@item.EndTime.ToString("MM/dd/yyyy hh:mm:ss tt")</td>
+                                    <td>
+                                        @if (item.IsDone)
+                                        {
+                                            <span class="badge rounded-pill text-bg-success p-2">Completed</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge rounded-pill text-bg-warning p-2">Not Completed</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!item.IsDone)
+                                        {
+                                            <form method="post" asp-action="MarkRimelineAsDone" asp-controller="Client">
+                                                <input type="hidden" name="itemId" value="@item.Id" />
+                                                <button type="submit" class="btn btn-sm btn-outline-success">✅ Mark Done</button>
+                                            </form>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center">No Timeline items found.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card table-card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h3>Wedding Guest List</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Full Name</th>
+                            <th scope="col">Phone Number</th>
+                            <th scope="col">Meal Preference</th>
+                            <th scope="col">Table Number</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Guests != null)
+                        {
+                            @foreach (Guest item in Model.Guests)
+                            {
+                                @if (!item.RSVP)
+                                {
+                                    <tr>
+                                        <td>@item.FullName</td>
+                                        <td>@item.Phone</td>
+                                        <td>@item.MealPreference</td>
+                                        <td>@item.TableNumber</td>
+                                    </tr>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center">No Guest found.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card table-card mt-5">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h3>Booked Vendor List</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Vendor Name</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Vendor Phone Number</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.VendorPackageBookings != null)
+                        {
+                            @foreach (VendorPackageBooking item in Model.VendorPackageBookings)
+                            {
+                                <tr>
+                                    <td>@item.VendorPackage.Vendor.Name</td>
+                                    <td>@item.VendorPackage.Vendor.VendorCategory.Name</td>
+                                    <td>@item.VendorPackage.Price.ToString("C", new System.Globalization.CultureInfo("en-LK"))</td>
+                                    <td>@item.VendorPackage.Vendor.Phone</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center">No Vendor Booking found.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Vendor Category";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-3">Add Vendor Category</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    @if (ViewData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@ViewData["ErrorMessage"]</div>
+    }
+
+    <form method="post" asp-action="VendorCategory">
+        <div class="mb-3">
+            <label class="form-label">Category Name</label>
+            <input type="text" class="form-control" name="Name" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Category</button>
+    </form>
+</div>

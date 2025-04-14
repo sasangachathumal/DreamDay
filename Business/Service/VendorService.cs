@@ -1,6 +1,7 @@
 ﻿using DreamDay.Business.Interface;
 using DreamDay.Data;
 using DreamDay.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DreamDay.Business.Service
 {
@@ -13,32 +14,61 @@ namespace DreamDay.Business.Service
         }
         public bool AddVendor(Vendor vendor)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                // Ensure the VendorCategoryId exists before saving
+                var category = _context.VendorCategories.Find(vendor.VendorCategoryId);
+                if (category == null)
+                {
+                    throw new Exception("Vendor category not found. Cannot add vendor.");
+                }
 
-        public bool DeleteVendor(int id)
-        {
-            throw new NotImplementedException();
-        }
+                vendor.VendorCategory = category; // ✅ Manually assign the category
 
-        public List<Vendor> GetAllVendors()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Vendor GetVendorByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Vendor> GetVendorsByCategoryId(int categoryId)
-        {
-            throw new NotImplementedException();
+                _context.Vendors.Add(vendor);
+                _context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                return false;
+            }
         }
 
         public bool UpdateVendor(Vendor vendor)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _context.Vendors.Update(vendor);
+                _context.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool DeleteVendor(int id)
+        {
+            var vendor = _context.Vendors.Find(id);
+            if (vendor == null) return false;
+
+            _context.Vendors.Remove(vendor);
+            _context.SaveChanges();
+            return true;
+        }
+
+
+        public List<Vendor> GetAllVendors()
+        {
+            return _context.Vendors.Include(v => v.VendorCategory).ToList();
+        }
+
+        public Vendor GetVendorById(int id)
+        {
+            return _context.Vendors.Include(v => v.VendorCategory).FirstOrDefault(v => v.Id == id);
         }
     }
 }

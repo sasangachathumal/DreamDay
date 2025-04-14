@@ -1,0 +1,45 @@
+﻿@model DreamDay.Models.VendorPackage
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Edit Package";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Edit Vendor Package</h2>
+
+    <form asp-action="EditPackageList" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label class="form-label">Select Vendor</label>
+            <select asp-for="VendorId" class="form-select" required>
+                <option value="">-- Select Vendor --</option>
+                @foreach (var vendor in ViewBag.Vendors)
+                {
+                    <option value="@vendor.Id" selected="@(Model.VendorId == vendor.Id)">
+                        @vendor.Name
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Package Name</label>
+            <input asp-for="Name" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Price</label>
+            <input asp-for="Price" class="form-control" step="0.01" required />
+        </div>
+
+        <button type="submit" class="btn btn-success">Update Package</button>
+        <a asp-action="PackageList" class="btn btn-secondary">Back to List</a>
+    </form>
+</div>

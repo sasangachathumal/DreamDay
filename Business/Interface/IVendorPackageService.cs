@@ -4,11 +4,14 @@ namespace DreamDay.Business.Interface
 {
     public interface IVendorPackageService
     {
-        List<VendorPackage> GetAllVendorPackages();
-        List<VendorPackage> GetVendorPackagesByVendorId(int vendorId);
-        VendorPackage GetVendorPackageById(int id);
         bool AddVendorPackage(VendorPackage vendorPackage);
-        bool UpdateVendorPackage(VendorPackage vendorPackage);
+        List<VendorPackage> GetAllVendorPackages();
         bool DeleteVendorPackage(int id);
+
+        VendorPackage? GetVendorPackageById(int id);
+        List<VendorPackage> GetVendorPackagesByVendorId(int id);
+        bool UpdateVendorPackage(VendorPackage vendorPackage);
+
+
     }
 }

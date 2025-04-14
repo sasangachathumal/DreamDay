@@ -9,9 +9,11 @@ using DreamDay.Data;
 using DreamDay.Models;
 using DreamDay.Business.Interface;
 using DreamDay.Business.Service;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DreamDay.Controllers
 {
+    [Authorize(Roles = "Client")]
     public class BudgetsController : Controller
     {
         private readonly IBudgetService _budgetService;
@@ -22,25 +24,17 @@ namespace DreamDay.Controllers
         }
 
         // GET: Budgets
-        public async Task<IActionResult> Index(int weddingId)
+        public async Task<IActionResult> Index()
         {
             int _WeddingId = 0;
-            if (weddingId == 0)
+            var sessionWeddingId = HttpContext.Session.GetInt32("WeddingId");
+            if (sessionWeddingId.HasValue)
             {
-                var sessionWeddingId = HttpContext.Session.GetInt32("WeddingId");
-                if (sessionWeddingId.HasValue)
-                {
-                    _WeddingId = sessionWeddingId.Value;
-                }
-                else
-                {
-                    _WeddingId = 0;
-                }
+                _WeddingId = sessionWeddingId.Value;
             }
             else
             {
-                _WeddingId = weddingId;
-                HttpContext.Session.SetInt32("WeddingId", weddingId);
+                _WeddingId = 0;
             }
             var budgets = _budgetService.GetBudgetsByWeddingId(_WeddingId);
             return View(budgets);

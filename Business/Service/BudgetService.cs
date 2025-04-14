@@ -66,7 +66,24 @@ namespace DreamDay.Business.Service
 
         public List<Budget> GetAllBudgets()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var budgetItem = _context.Budgets
+                .Include(c => c.Wedding)
+                .ToList();
+                if (budgetItem == null)
+                {
+                    return null;
+                }
+                return budgetItem;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (important for debugging)
+                Console.WriteLine($"Error on getting budget item: {ex.Message}");
+                // Optionally return false or a specific error code/message
+                return null;
+            }
         }
 
         public Budget GetBudgetById(int id)
@@ -93,11 +110,6 @@ namespace DreamDay.Business.Service
                 // Optionally return false or a specific error code/message
                 return null;
             }
-        }
-
-        public List<Budget> GetBudgetsByCategory(BudgetCategory budgetCategory)
-        {
-            throw new NotImplementedException();
         }
 
         public List<Budget> GetBudgetsByWeddingId(int weddingId)

@@ -47,8 +47,12 @@ namespace DreamDay.Business.Service
             return _context.SaveChanges() > 0;
         }
 
-
-
-
+        public List<VendorPackage> GetVendorPackagesByVendorId(int id)
+        {
+            return _context.VendorPackages
+                .Include(p => p.Vendor)
+                .Where(m => m.VendorId == id)
+                .ToList();
+        }
     }
 }

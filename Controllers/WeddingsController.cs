@@ -9,19 +9,30 @@ using DreamDay.Data;
 using DreamDay.Models;
 using DreamDay.Business.Service;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using DreamDay.Business.Interface;
 
 namespace DreamDay.Controllers
 {
-    [Authorize(Roles = "Client, Planner, Admin")]
+    [Authorize(Roles = "Client")]
     public class WeddingsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly WeddingService _weddingService;
+        private readonly IWeddingService _weddingService;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public WeddingsController(ApplicationDbContext context, WeddingService weddingService)
+        public WeddingsController(
+            ApplicationDbContext context,
+            IWeddingService weddingService, 
+            SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager
+            )
         {
             _context = context;
             _weddingService = weddingService;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         // GET: Weddings
@@ -54,8 +65,6 @@ namespace DreamDay.Controllers
         // GET: Weddings/Create
         public IActionResult Create()
         {
-            ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["PlannerId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -64,22 +73,26 @@ namespace DreamDay.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ClientId,PlannerId,WeddingDate,TotalGuests,FullBudget")] Wedding wedding)
+        public async Task<IActionResult> Create([Bind("Id,WeddingDate,TotalGuests,FullBudget")] Wedding wedding)
         {
+            ModelState.Remove("Client");
+            ModelState.Remove("Planner");
+            ModelState.Remove("ClientId");
+            ModelState.Remove("PlannerId");
             if (ModelState.IsValid)
             {
+                var SignedInUser = _signInManager.UserManager.GetUserAsync(User).Result;
+                wedding.ClientId = SignedInUser.Id;
                 var result = _weddingService.AddWedding(wedding);
                 if (result)
                 {
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Dashboard", "Client");
                 }
                 else
                 {
 
                 }
             }
-            ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id", wedding.ClientId);
-            ViewData["PlannerId"] = new SelectList(_context.Users, "Id", "Id", wedding.PlannerId);
             return View(wedding);
         }
 
@@ -139,39 +152,28 @@ namespace DreamDay.Controllers
         }
 
         // GET: Weddings/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> SelectPlanner()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var wedding = await _context.Weddings
-                .Include(w => w.Client)
-                .Include(w => w.Planner)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (wedding == null)
-            {
-                return NotFound();
-            }
-
-            return View(wedding);
+            var planners = await _userManager.GetUsersInRoleAsync("Planner");
+            return View(planners);
         }
 
-        // POST: Weddings/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> AssignPllaner(string id)
         {
-            var wedding = await _context.Weddings.FindAsync(id);
-            if (wedding != null)
+            int _WeddingId = 0;
+            var sessionWeddingId = HttpContext.Session.GetInt32("WeddingId");
+            if (sessionWeddingId.HasValue)
             {
-                _context.Weddings.Remove(wedding);
+                _WeddingId = sessionWeddingId.Value;
             }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            else
+            {
+                _WeddingId = 0;
+            }
+            _weddingService.AssignPlanner(id, _WeddingId);
+            return RedirectToAction("Dashboard", "Client");
         }
+
 
         private bool WeddingExists(int id)
         {

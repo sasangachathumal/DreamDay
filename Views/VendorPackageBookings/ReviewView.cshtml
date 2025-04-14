@@ -1,0 +1,49 @@
+﻿@model DreamDay.Models.Vendor
+
+@{
+    ViewData["Title"] = "ReviewView";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+<div class="container-fluid">
+    <h1>Vendor Reviews</h1>
+    <p class="w-100 pt-3 pb-3">
+        <a class="btn btn-outline-secondary" asp-action="Create">Back to Vendor Catalog</a>
+    </p>
+    @{
+        var reviews = Model.VendorReviews;
+    }
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Rating
+                </th>
+                <th>
+                    Message
+                </th>
+                <th>
+                    Date
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (reviews != null)
+            {
+                @foreach (var item in reviews)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Rating)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Message)
+                        </td>
+                        <td>
+                            @item.date.ToString("MM/dd/yyyy")
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

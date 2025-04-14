@@ -1,0 +1,75 @@
+﻿@model IEnumerable<DreamDay.Models.VendorPackageBooking>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+<div class="container-fluid">
+    <h1>Booked Vendors</h1>
+
+    <p class="w-100 pt-3 pb-3">
+        <a class="btn btn-primary" asp-action="Create">New Booking</a>
+    </p>
+
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        @if (Model != null)
+        {
+            @foreach (var item in Model)
+            {
+                <div class="col">
+                    <div class="card h-100">
+                        <div id="carouselExample-@item.VendorPackage.Id" class="carousel slide">
+                            <div class="carousel-inner" style="border-top-left-radius: 0.375rem; border-top-right-radius: 0.375rem;">
+                                @foreach (var image in item.VendorPackage.Vendor.VendorImages)
+                                {
+                                    <div class="carousel-item active">
+                                        <img src="@image.ImageURL" class="d-block w-100">
+                                    </div>
+                                }
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample-@item.VendorPackage.Id" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample-@item.VendorPackage.Id" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                        <div class="card-body d-grid">
+                            <h2 class="text-black">@item.VendorPackage.Vendor?.Name</h2>
+                            <h4 class="text-black">@item.VendorPackage.Vendor?.VendorCategory?.Name</h4>
+                            <h5 class="text-black">@item.VendorPackage.Price.ToString("C", new System.Globalization.CultureInfo("en-LK"))</h5>
+                            <p class="mb-1">@item.VendorPackage?.Vendor?.Phone | @item.VendorPackage?.Vendor?.Email</p>
+                            <p class="text-black">@item.VendorPackage?.Vendor?.Description</p>
+                            @if (item.IsConfirmed)
+                            {
+                                <span class="badge rounded-pill text-bg-success p-2">Confirmed</span>
+                            }
+                            else
+                            {
+                                <span class="badge rounded-pill text-bg-warning p-2">Not Confirmed</span>
+                            }
+                            <div class="row">
+                                <div class="col-md-6 d-grid">
+                                    @if (item.IsConfirmed)
+                                    {
+                                        <a class="btn btn-success mt-2" asp-action="Create" asp-controller="VendorReviews" asp-route-vendorId="@item.VendorPackage?.VendorId">Provide Review</a>
+                                    }
+                                    else 
+                                    {
+                                        <a class="btn btn-success mt-2" asp-action="Confirm" asp-route-id="@item.Id">Confirm</a>
+                                    }
+                                </div>
+                                <div class="col-md-6 d-grid">
+                                    <a class="btn btn-danger mt-2" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+

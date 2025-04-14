@@ -64,11 +64,6 @@ namespace DreamDay.Business.Service
             }
         }
 
-        public List<Guest> GetAllGuests()
-        {
-            throw new NotImplementedException();
-        }
-
         public Guest GetGuestById(int id)
         {
             if (id == 0)
@@ -117,21 +112,6 @@ namespace DreamDay.Business.Service
                 // Optionally return an empty list or a specific error code/message
                 return new List<Guest>();
             }
-        }
-
-        public List<Guest> GetGuestsOfWeddingByMealPreference(int weddingId, MealPreference mealPreference)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Guest> GetGuestsOfWeddingByRSVP(int weddingId, bool RSVP)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Guest> GetGuestsOfWeddingByTableNumber(int weddingId, int tableNumber)
-        {
-            throw new NotImplementedException();
         }
 
         public bool MarkAsAttending(int id)

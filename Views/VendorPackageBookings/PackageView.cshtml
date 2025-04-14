@@ -1,0 +1,64 @@
+﻿@model DreamDay.Models.Vendor
+
+@{
+    ViewData["Title"] = "PackageView";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+<div class="container-fluid">
+    <h1>Vendor Packages</h1>
+    <p class="w-100 pt-3 pb-3">
+        <a class="btn btn-outline-secondary" asp-action="Create">Back to Vendor Catalog</a>
+    </p>
+    @{
+        var packages = Model.VendorPackages;
+    }
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Package Name
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Price
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (packages != null)
+            {
+                @foreach (var item in packages)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @if (item.Description == null)
+                            {
+                                <p>~ not provided ~</p>
+                            }
+                            else
+                            {
+                                <p>@item.Description</p>
+                            }
+                        </td>
+                        <td>
+                            @item.Price.ToString("C", new System.Globalization.CultureInfo("en-LK"))
+                        </td>
+                        <td>
+                            <form asp-action="Book" class="d-grid">
+                                <input type="hidden" name="vendorPackageId" value="@item.Id" />
+                                <input type="hidden" name="vendorId" value="@Model.Id" />
+                                <input type="submit" value="Book" class="btn btn-success" />
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

@@ -10,7 +10,6 @@ namespace DreamDay.Models
         public int Id { get; set; }
         [Required]
         public required string ClientId { get; set; }
-        [Required]
         public string? PlannerId { get; set; }
 
 

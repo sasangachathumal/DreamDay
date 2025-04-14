@@ -24,25 +24,17 @@ namespace DreamDay.Controllers
         }
 
         // GET: Guests
-        public async Task<IActionResult> Index(int weddingId)
+        public async Task<IActionResult> Index()
         {
             int _WeddingId = 0;
-            if (weddingId == 0)
+            var sessionWeddingId = HttpContext.Session.GetInt32("WeddingId");
+            if (sessionWeddingId.HasValue)
             {
-                var sessionWeddingId = HttpContext.Session.GetInt32("WeddingId");
-                if (sessionWeddingId.HasValue)
-                {
-                    _WeddingId = sessionWeddingId.Value;
-                }
-                else
-                {
-                    _WeddingId = 0;
-                }
+                _WeddingId = sessionWeddingId.Value;
             }
             else
             {
-                _WeddingId = weddingId;
-                HttpContext.Session.SetInt32("WeddingId", weddingId);
+                _WeddingId = 0;
             }
             var guests = _guestService.GetGuestsByWeddingId(_WeddingId);
             return View(guests);

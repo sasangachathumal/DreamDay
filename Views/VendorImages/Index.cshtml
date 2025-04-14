@@ -1,0 +1,29 @@
+﻿@model IEnumerable<DreamDay.Models.VendorImages>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Vendor Image List</h1>
+
+<p class="my-3">
+    <a class="btn btn-primary" asp-action="Create">Create New</a>
+</p>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @if (Model != null)
+    {
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <img src="@item.ImageURL" class="card-img-top vender-image">
+                    <div class="card-body">
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

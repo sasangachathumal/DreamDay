@@ -70,11 +70,5 @@ namespace DreamDay.Business.Service
         {
             return _context.Vendors.Include(v => v.VendorCategory).FirstOrDefault(v => v.Id == id);
         }
-
-
-        public List<Vendor> GetVendorsByCategoryId(int categoryId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

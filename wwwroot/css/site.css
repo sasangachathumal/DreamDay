@@ -20,3 +20,23 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.cover-container {
+    max-width: 100%;
+    height: 100%;
+}
+
+    .cover-container h1 {
+        font-size: 6rem;
+        font-weight: 900;
+        text-shadow: 0 0 20px hsl(0deg 0% 43.45%);
+    }
+
+.main-container {
+    height: 80vh;
+    max-height: 80vh;
+}
+    .main-container main {
+        height: 80vh;
+        max-height: 80vh;
+    }

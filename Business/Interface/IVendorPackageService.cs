@@ -9,6 +9,7 @@ namespace DreamDay.Business.Interface
         bool DeleteVendorPackage(int id);
 
         VendorPackage? GetVendorPackageById(int id);
+        List<VendorPackage> GetVendorPackagesByVendorId(int id);
         bool UpdateVendorPackage(VendorPackage vendorPackage);
 
 

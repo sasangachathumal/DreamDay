@@ -7,9 +7,7 @@ namespace DreamDay.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
-        public required string UserID { get; set; }
-        [Required]
+        public string UserID { get; set; }
         public int VendorID { get; set; }
 
 
@@ -17,7 +15,7 @@ namespace DreamDay.Models
         [Required]
         public int Rating { get; set; }
         [Required]
-        public DateTime date { get; set; } = DateTime.UtcNow;
+        public DateTime date { get; set; } = DateTime.UtcNow.Date;
 
         [ForeignKey("VendorID")]
         public required Vendor Vendor { get; set; }

@@ -3,6 +3,55 @@
     Layout = "~/Views/Shared/_PlannerLayout.cshtml";
     ViewData["Title"] = "Dashboard";
 }
-
-<h1>Dashboard</h1>
+@model IEnumerable<DreamDay.Models.Wedding>
+<div class="container-fluid">
+    <h1>Planner Dashboard</h1>
+    <p>This is where you can manage wedding plans and tasks.</p>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.WeddingDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TotalGuests)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FullBudget)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Client)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @item.WeddingDate.ToString("MM/dd/yyyy")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalGuests)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FullBudget)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Client.FullName)
+                            </td>
+                            <td>
+                                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Id">View Details</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 

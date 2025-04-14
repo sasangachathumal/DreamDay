@@ -5,7 +5,6 @@ namespace DreamDay.Business.Interface
     public interface IVendorService
     {
         List<Vendor> GetAllVendors();
-        List<Vendor> GetVendorsByCategoryId(int categoryId);
         Vendor GetVendorById(int id);
 
         bool AddVendor(Vendor vendor);

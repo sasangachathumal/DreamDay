@@ -86,7 +86,7 @@ namespace DreamDay.Controllers
                 var result = _weddingService.AddWedding(wedding);
                 if (result)
                 {
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Dashboard", "Client");
                 }
                 else
                 {

@@ -193,5 +193,26 @@ namespace DreamDay.Business.Service
                 return false;
             }
         }
+
+        public List<VendorPackageBooking> GetAllVendor()
+        {
+            try
+            {
+                var VendorPackagesBookingList = _context.VendorPackagesBooking
+                    .Include(c => c.VendorPackage)
+                    .Include(c => c.VendorPackage.Vendor)
+                    .Include(c => c.Wedding)
+                    .ToList();
+
+                return VendorPackagesBookingList;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (important for debugging)
+                Console.WriteLine($"Error retrieving vendorPackageBookings : {ex.Message}");
+                // Optionally return an empty list
+                return new List<VendorPackageBooking>();
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace DreamDay.Business.Interface
 {
     public interface IVendorPackageBookingService
     {
+        List<VendorPackageBooking> GetAllVendor();
         List<VendorPackageBooking> GetVendorPackageBookingsByVendorId(int vendorId);
         List<VendorPackageBooking> GetVendorPackageBookingsByWeddingId(int weddingId);
         VendorPackageBooking GetVendorPackageBookingById(int id);

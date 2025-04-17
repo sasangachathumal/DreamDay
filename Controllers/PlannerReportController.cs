@@ -29,7 +29,7 @@ namespace DreamDay.Controllers
         }
         public IActionResult Index()
         {
-            var topBookingPackages = _vendorPackageBookingService.GetAllVendor()
+            var topBookingPackages = _vendorPackageBookingService.GetAllVendorPackages()
                                     .GroupBy(v => v.VendorPackageID)
                                     .OrderByDescending(g => g.Count())
                                     .SelectMany(g => g)

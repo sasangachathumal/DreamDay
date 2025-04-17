@@ -194,7 +194,7 @@ namespace DreamDay.Business.Service
             }
         }
 
-        public List<VendorPackageBooking> GetAllVendor()
+        public List<VendorPackageBooking> GetAllVendorPackages()
         {
             try
             {

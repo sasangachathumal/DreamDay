@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_ClientLayout.cshtml";
 }
 <div class="container-fluid">
-    <h1>Guest Details</h1>
+    <h1>Budget Details</h1>
     <hr />
 
     <div class="row d-flex justify-content-center">
@@ -27,7 +27,7 @@
                             <h5 class="mb-1">Allocated Amount</h5>
                         </div>
                         <div class="col-md-8">
-                            <p class="mb-1">@Model.AllocatedAmount</p>
+                            <p class="mb-1">@Model.AllocatedAmount.ToString("C", new System.Globalization.CultureInfo("en-LK"))</p>
                         </div>
                     </div>
                 </li>
@@ -37,7 +37,7 @@
                             <h5 class="mb-1">Spend Amount</h5>
                         </div>
                         <div class="col-md-8">
-                            <p class="mb-1">@Model.SpendAmount</p>
+                            <p class="mb-1">@Model.SpendAmount?.ToString("C", new System.Globalization.CultureInfo("en-LK"))</p>
                         </div>
                     </div>
                 </li>

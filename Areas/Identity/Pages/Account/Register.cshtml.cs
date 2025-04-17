@@ -129,7 +129,7 @@ namespace DreamDay.Areas.Identity.Pages.Account
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            Roles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
+            Roles = await _roleManager.Roles.Where(r => r.Name != "Admin").Select(r => r.Name).ToListAsync();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)

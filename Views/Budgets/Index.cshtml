@@ -33,10 +33,10 @@
                         @Html.DisplayFor(modelItem => item.Category)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.AllocatedAmount)
+                        @item.AllocatedAmount.ToString("C", new System.Globalization.CultureInfo("en-LK"))
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.SpendAmount)
+                        @item.SpendAmount?.ToString("C", new System.Globalization.CultureInfo("en-LK"))
                     </td>
                     <td>
                         <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>

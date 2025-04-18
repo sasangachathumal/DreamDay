@@ -83,5 +83,23 @@ namespace DreamDay.Controllers
 
             return View(wedding);
         }
+
+        public IActionResult MarkAsDone(int itemId)
+        {
+            if (_checklistItemService.MarkAsDone(itemId))
+            {
+                return RedirectToAction("Dashboard");
+            }
+            return View();
+        }
+
+        public IActionResult MarkRimelineAsDone(int itemId)
+        {
+            if (_timelineService.MarkAsDone(itemId))
+            {
+                return RedirectToAction("Dashboard");
+            }
+            return View();
+        }
     }
 }

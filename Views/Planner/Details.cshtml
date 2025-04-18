@@ -52,7 +52,7 @@
                                         <td>@item.Description</td>
                                         <td>@item.DateTime.ToString("MM/dd/yyyy hh:mm:ss tt")</td>
                                         <td>
-                                            <form method="post" asp-action="MarkAsDone" asp-controller="Client">
+                                            <form method="post" asp-action="MarkAsDone" asp-controller="Planner">
                                                 <input type="hidden" name="itemId" value="@item.Id" />
                                                 <button type="submit" class="btn btn-sm btn-outline-success">✅ Mark Done</button>
                                             </form>
@@ -112,7 +112,7 @@
                                     <td>
                                         @if (!item.IsDone)
                                         {
-                                            <form method="post" asp-action="MarkRimelineAsDone" asp-controller="Client">
+                                            <form method="post" asp-action="MarkRimelineAsDone" asp-controller="Planner">
                                                 <input type="hidden" name="itemId" value="@item.Id" />
                                                 <button type="submit" class="btn btn-sm btn-outline-success">✅ Mark Done</button>
                                             </form>

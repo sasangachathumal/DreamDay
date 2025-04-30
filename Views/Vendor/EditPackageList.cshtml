@@ -31,12 +31,12 @@
 
         <div class="mb-3">
             <label class="form-label">Description</label>
-            <textarea asp-for="Description" class="form-control"></textarea>
+            <textarea asp-for="Description" class="form-control"required></textarea>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Price</label>
-            <input asp-for="Price" class="form-control" step="0.01" required />
+            <input asp-for="Price" type="number" class="form-control" step="0.01" required />
         </div>
 
         <button type="submit" class="btn btn-success">Update Package</button>

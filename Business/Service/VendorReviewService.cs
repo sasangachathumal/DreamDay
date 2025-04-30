@@ -80,6 +80,26 @@ namespace DreamDay.Business.Service
                 return new List<VendorReviews>();
             }
         }
+public VendorReviews GetVendorReviewById(int id)
+{
+    if (id == 0)
+    {
+        return null;
+    }
+
+    try
+    {
+        return _context.VendorReviews
+            .Include(p => p.Vendor)
+            .Include(p => p.User)
+            .FirstOrDefault(m => m.Id == id);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error retrieving review (ID: {id}): {ex.Message}");
+        return null;
+    }
+}
 
         public List<VendorReviews> GetVendorReviewsById(int id)
         {

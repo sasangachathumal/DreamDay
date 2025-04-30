@@ -43,13 +43,14 @@ namespace DreamDay.Controllers
                 return NotFound();
             }
 
-            var vendorReviews = _vendorReviewService.GetVendorReviewsById(id);
-            if (vendorReviews == null)
+           var vendorReview = _vendorReviewService.GetVendorReviewById(id);
+
+            if (vendorReview == null)
             {
                 return NotFound();
             }
 
-            return View(vendorReviews);
+            return View(vendorReview);
         }
 
         // GET: VendorReviews/Create
@@ -88,13 +89,13 @@ namespace DreamDay.Controllers
                 return NotFound();
             }
 
-            var vendorReviews = _vendorReviewService.GetVendorReviewsById(id.Value);
-            if (vendorReviews == null)
+             var vendorReview = _vendorReviewService.GetVendorReviewById(id.Value);
+            if (vendorReview == null)
             {
                 return NotFound();
             }
 
-            return View(vendorReviews);
+            return View(vendorReview);
         }
 
         // POST: VendorReviews/Delete/5

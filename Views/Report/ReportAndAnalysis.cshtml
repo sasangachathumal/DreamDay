@@ -1,106 +1,515 @@
 ﻿@{
-    ViewBag.Title = "Reports & Analysis";
+    ViewBag.Title = "Wedding Analytics Dashboard";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h2 class="mb-4 text-2xl font-bold">Vendor & Wedding Analysis</h2>
-
-<div class="grid md:grid-cols-2 gap-6">
-    <!-- Vendor Bar Chart -->
-    <div class="bg-white p-4 rounded shadow">
-        <h4 class="font-semibold mb-2 text-gray-700">Vendors by Category (Bar)</h4>
-        <div class="h-[180px]">
-            <canvas id="vendorChart" class="w-full h-full"></canvas>
+<div class="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-6">
+    <!-- Header Section -->
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">📊 Wedding Analytics Dashboard</h1>
+            <p class="text-lg text-gray-600">Track your wedding business performance with beautiful insights</p>
         </div>
-        <a class="btn btn-success mt-3 inline-block" href="@Url.Action("ExportVendorExcel", "Report")">Download Vendor Report</a>
-    </div>
 
-    <!-- Vendor Pie Chart -->
-    <div class="bg-white p-4 rounded shadow">
-        <h4 class="font-semibold mb-2 text-gray-700">Vendors by Category (Pie)</h4>
-        <div class="h-[180px]">
-            <canvas id="vendorPieChart" class="w-full h-full"></canvas>
-        </div>
-    </div>
+    
+        <!-- Charts Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+            <!-- Vendor Bar Chart -->
+            <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 flex items-center">
+                            <span class="mr-2">📊</span>
+                            Vendor Categories
+                        </h3>
+                        <p class="text-gray-600 mt-1">Distribution of vendors by type</p>
+                    </div>
+                </div>
+                <div class="h-[280px] mb-4">
+                    <canvas id="vendorChart" class="w-full h-full"></canvas>
+                </div>
+                <div class="flex justify-center gap-3">
+                    <a class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5" 
+                       href="@Url.Action("ExportVendorExcel", "Report")">
+                        <span class="mr-2">📥</span>
+                        Download Excel Report
+                    </a>
+                    <button onclick="exportChart('vendorChart')" 
+                            class="inline-flex items-center px-4 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                        <span class="mr-2">🖼️</span>
+                        Export Chart
+                    </button>
+                </div>
+            </div>
 
-    <!-- Wedding Line Chart -->
-    <div class="bg-white p-4 rounded shadow md:col-span-2">
-        <h4 class="font-semibold mb-2 text-gray-700">Weddings per Month</h4>
-        <div class="h-[220px]">
-            <canvas id="weddingChart" class="w-full h-full"></canvas>
+            <!-- Vendor Pie Chart -->
+            <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800 flex items-center">
+                            <span class="mr-2">🥧</span>
+                            Vendor Breakdown
+                        </h3>
+                        <p class="text-gray-600 mt-1">Visual proportion of each category</p>
+                    </div>
+                </div>
+                <div class="h-[280px]">
+                    <canvas id="vendorPieChart" class="w-full h-full"></canvas>
+                </div>
+            </div>
         </div>
-        <a class="btn btn-primary mt-3 inline-block" href="@Url.Action("ExportWeddingExcel", "Report")">Download Wedding Report</a>
+
+        <!-- Wedding Trends Chart -->
+        <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800 flex items-center">
+                        <span class="mr-2">📈</span>
+                        Wedding Trends Over Time
+                    </h3>
+                    <p class="text-gray-600 mt-1">Monthly wedding bookings and seasonal patterns</p>
+                </div>
+            </div>
+            <div class="h-[320px] mb-6">
+                <canvas id="weddingChart" class="w-full h-full"></canvas>
+            </div>
+            <div class="flex justify-center gap-3">
+                <a class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5" 
+                   href="@Url.Action("ExportWeddingExcel", "Report")">
+                    <span class="mr-2">📥</span>
+                    Download Excel Report
+                </a>
+                <button onclick="exportChart('weddingChart')" 
+                        class="inline-flex items-center px-4 py-3 bg-gradient-to-r from-indigo-500 to-indigo-600 text-white font-semibold rounded-lg hover:from-indigo-600 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    <span class="mr-2">🖼️</span>
+                    Export Chart
+                </button>
+            </div>
+        </div>
+
+      
     </div>
 </div>
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        // Register Chart.js plugins
+        Chart.register(
+            Chart.CategoryScale,
+            Chart.LinearScale,
+            Chart.BarElement,
+            Chart.LineElement,
+            Chart.PointElement,
+            Chart.ArcElement,
+            Chart.Title,
+            Chart.Tooltip,
+            Chart.Legend
+        );
+
         const vendorData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.VendorChartData));
         const weddingData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.WeddingChartData));
 
         const vendorLabels = vendorData.map(x => x.Category);
         const vendorCounts = vendorData.map(x => x.Count);
+        const weddingLabels = weddingData.map(x => x.Month);
+        const weddingCounts = weddingData.map(x => x.Count);
 
-        // Vendor Bar Chart
-        new Chart(document.getElementById('vendorChart').getContext('2d'), {
+        // Enhanced color palette with gradients
+        const colorPalette = [
+            '#8B5CF6', '#06D6A0', '#F59E0B', '#EF4444', 
+            '#3B82F6', '#EC4899', '#10B981', '#F97316'
+        ];
+
+        // Create gradient backgrounds
+        function createGradient(ctx, color1, color2, vertical = false) {
+            const gradient = vertical 
+                ? ctx.createLinearGradient(0, 0, 0, 400)
+                : ctx.createLinearGradient(0, 0, 400, 0);
+            gradient.addColorStop(0, color1);
+            gradient.addColorStop(1, color2);
+            return gradient;
+        }
+
+        // Update summary stats with animations
+        function animateValue(element, start, end, duration) {
+            const startTime = performance.now();
+            const update = (currentTime) => {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const current = Math.floor(start + (end - start) * progress);
+                element.textContent = current.toLocaleString();
+                if (progress < 1) requestAnimationFrame(update);
+            };
+            requestAnimationFrame(update);
+        }
+
+        const totalVendors = vendorCounts.reduce((a, b) => a + b, 0);
+        const totalWeddings = weddingCounts.reduce((a, b) => a + b, 0);
+        const thisMonth = weddingCounts[weddingCounts.length - 1] || 0;
+
+        // Animate stats
+        setTimeout(() => {
+            animateValue(document.getElementById('totalVendors'), 0, totalVendors, 1500);
+            animateValue(document.getElementById('totalWeddings'), 0, totalWeddings, 2000);
+            animateValue(document.getElementById('thisMonth'), 0, thisMonth, 1000);
+        }, 500);
+
+        // Custom plugin for data labels
+        const dataLabelsPlugin = {
+            id: 'dataLabels',
+            afterDatasetsDraw(chart, args, options) {
+                const { ctx, data, chartArea: { top, bottom, left, right } } = chart;
+                ctx.save();
+                
+                if (chart.config.type === 'bar') {
+                    data.datasets.forEach((dataset, datasetIndex) => {
+                        const meta = chart.getDatasetMeta(datasetIndex);
+                        meta.data.forEach((bar, index) => {
+                            const value = dataset.data[index];
+                            if (value > 0) {
+                                ctx.fillStyle = '#374151';
+                                ctx.font = 'bold 12px Arial';
+                                ctx.textAlign = 'center';
+                                ctx.fillText(value, bar.x, bar.y - 5);
+                            }
+                        });
+                    });
+                }
+                ctx.restore();
+            }
+        };
+
+        // Advanced Vendor Bar Chart
+        const vendorChart = new Chart(document.getElementById('vendorChart').getContext('2d'), {
             type: 'bar',
             data: {
                 labels: vendorLabels,
                 datasets: [{
-                    label: '# of Vendors',
+                    label: 'Number of Vendors',
                     data: vendorCounts,
-                    backgroundColor: 'rgba(131, 8, 35, 0.7)',
-                    barThickness: 20 // smaller bars
+                    backgroundColor: (ctx) => {
+                        const gradient = ctx.chart.ctx.createLinearGradient(0, 0, 0, 300);
+                        gradient.addColorStop(0, colorPalette[ctx.dataIndex % colorPalette.length]);
+                        gradient.addColorStop(1, colorPalette[ctx.dataIndex % colorPalette.length] + '80');
+                        return gradient;
+                    },
+                    borderColor: colorPalette.slice(0, vendorLabels.length),
+                    borderWidth: 2,
+                    borderRadius: 12,
+                    borderSkipped: false,
+                    hoverBackgroundColor: (ctx) => colorPalette[ctx.dataIndex % colorPalette.length],
+                    hoverBorderWidth: 3
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } }
-            }
+                animation: {
+                    duration: 2000,
+                    easing: 'easeOutBounce'
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                        titleColor: 'white',
+                        bodyColor: 'white',
+                        cornerRadius: 12,
+                        displayColors: false,
+                        titleFont: { size: 14, weight: 'bold' },
+                        bodyFont: { size: 13 },
+                        padding: 12,
+                        callbacks: {
+                            title: (context) => `${context[0].label} Vendors`,
+                            label: (context) => `Count: ${context.parsed.y}`,
+                            afterLabel: (context) => {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed.y / total) * 100).toFixed(1);
+                                return `Percentage: ${percentage}%`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { 
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: { 
+                            color: '#6B7280',
+                            font: { size: 12, weight: '500' },
+                            maxRotation: 45
+                        }
+                    },
+                    y: {
+                        grid: { 
+                            color: '#F3F4F6',
+                            drawBorder: false
+                        },
+                        ticks: { 
+                            color: '#6B7280',
+                            font: { size: 12 },
+                            callback: (value) => value.toLocaleString()
+                        },
+                        beginAtZero: true
+                    }
+                },
+                onHover: (event, activeElements) => {
+                    event.native.target.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
+                }
+            },
+            plugins: [dataLabelsPlugin]
         });
 
-        // Vendor Pie Chart
-        new Chart(document.getElementById('vendorPieChart').getContext('2d'), {
-            type: 'pie',
+        // Advanced Vendor Doughnut Chart with custom center text
+        const centerTextPlugin = {
+            id: 'centerText',
+            afterDraw(chart) {
+                if (chart.config.type !== 'doughnut') return;
+                
+                const { ctx, chartArea: { width, height } } = chart;
+                const centerX = width / 2;
+                const centerY = height / 2;
+                
+                ctx.save();
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                // Main number
+                ctx.font = 'bold 24px Arial';
+                ctx.fillStyle = '#1F2937';
+                ctx.fillText(totalVendors, centerX, centerY - 10);
+                
+                // Label
+                ctx.font = '12px Arial';
+                ctx.fillStyle = '#6B7280';
+                ctx.fillText('Total Vendors', centerX, centerY + 12);
+                
+                ctx.restore();
+            }
+        };
+
+        const vendorPieChart = new Chart(document.getElementById('vendorPieChart').getContext('2d'), {
+            type: 'doughnut',
             data: {
                 labels: vendorLabels,
                 datasets: [{
                     data: vendorCounts,
-                    backgroundColor: [
-                        '#830823', '#F59E0B', '#10B981',
-                        '#3B82F6', '#8B5CF6', '#EC4899', '#F87171'
-                    ]
+                    backgroundColor: colorPalette.slice(0, vendorLabels.length),
+                    borderColor: '#ffffff',
+                    borderWidth: 3,
+                    cutout: '65%',
+                    hoverOffset: 15,
+                    hoverBorderWidth: 4
                 }]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false
-            }
+                maintainAspectRatio: false,
+                animation: {
+                    animateRotate: true,
+                    animateScale: true,
+                    duration: 2000
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            font: { size: 12, weight: '500' },
+                            generateLabels: (chart) => {
+                                const data = chart.data;
+                                const total = data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                return data.labels.map((label, i) => ({
+                                    text: `${label} (${((data.datasets[0].data[i] / total) * 100).toFixed(1)}%)`,
+                                    fillStyle: data.datasets[0].backgroundColor[i],
+                                    strokeStyle: data.datasets[0].backgroundColor[i],
+                                    pointStyle: 'circle'
+                                }));
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                        titleColor: 'white',
+                        bodyColor: 'white',
+                        cornerRadius: 12,
+                        padding: 12,
+                        callbacks: {
+                            label: (context) => {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                return `${context.label}: ${context.parsed} (${percentage}%)`;
+                            }
+                        }
+                    }
+                },
+                onHover: (event, activeElements) => {
+                    event.native.target.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
+                }
+            },
+            plugins: [centerTextPlugin]
         });
 
-        // Wedding Line Chart
-        const weddingLabels = weddingData.map(x => x.Month);
-        const weddingCounts = weddingData.map(x => x.Count);
-
-        new Chart(document.getElementById('weddingChart').getContext('2d'), {
+        // Advanced Wedding Line Chart with multiple datasets
+        const weddingChart = new Chart(document.getElementById('weddingChart').getContext('2d'), {
             type: 'line',
             data: {
                 labels: weddingLabels,
                 datasets: [{
-                    label: '# of Weddings',
+                    label: 'Weddings Booked',
                     data: weddingCounts,
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: '#3B82F6',
+                    backgroundColor: (ctx) => {
+                        const gradient = ctx.chart.ctx.createLinearGradient(0, 0, 0, 300);
+                        gradient.addColorStop(0, 'rgba(59, 130, 246, 0.3)');
+                        gradient.addColorStop(1, 'rgba(59, 130, 246, 0.05)');
+                        return gradient;
+                    },
                     fill: true,
-                    tension: 0.3
+                    tension: 0.4,
+                    pointBackgroundColor: '#3B82F6',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 3,
+                    pointRadius: 7,
+                    pointHoverRadius: 10,
+                    pointHoverBackgroundColor: '#1D4ED8',
+                    pointHoverBorderWidth: 4,
+                    borderWidth: 3
+                }, {
+                    label: 'Trend Line',
+                    data: weddingCounts.map((_, i, arr) => {
+                        // Simple moving average for trend
+                        const window = 3;
+                        const start = Math.max(0, i - Math.floor(window / 2));
+                        const end = Math.min(arr.length, start + window);
+                        const sum = arr.slice(start, end).reduce((a, b) => a + b, 0);
+                        return Math.round(sum / (end - start));
+                    }),
+                    borderColor: '#F59E0B',
+                    backgroundColor: 'transparent',
+                    borderDash: [10, 5],
+                    pointRadius: 0,
+                    borderWidth: 2,
+                    tension: 0.2
                 }]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false
+                maintainAspectRatio: false,
+                animation: {
+                    duration: 2500,
+                    easing: 'easeInOutQuart'
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        align: 'end',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: { size: 12, weight: '500' }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                        titleColor: 'white',
+                        bodyColor: 'white',
+                        cornerRadius: 12,
+                        padding: 12,
+                        displayColors: true,
+                        callbacks: {
+                            title: (context) => `Month: ${context[0].label}`,
+                            afterBody: (context) => {
+                                const dataIndex = context[0].dataIndex;
+                                const previousMonth = dataIndex > 0 ? weddingCounts[dataIndex - 1] : 0;
+                                const currentMonth = weddingCounts[dataIndex];
+                                const change = currentMonth - previousMonth;
+                                const changePercent = previousMonth > 0 ? ((change / previousMonth) * 100).toFixed(1) : 0;
+                                return change !== 0 ? `Change: ${change > 0 ? '+' : ''}${change} (${changePercent}%)` : '';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { 
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: { 
+                            color: '#6B7280',
+                            font: { size: 12, weight: '500' }
+                        }
+                    },
+                    y: {
+                        grid: { 
+                            color: '#F3F4F6',
+                            drawBorder: false
+                        },
+                        ticks: { 
+                            color: '#6B7280',
+                            font: { size: 12 },
+                            callback: (value) => value.toLocaleString()
+                        },
+                        beginAtZero: true
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                onHover: (event, activeElements) => {
+                    event.native.target.style.cursor = activeElements.length > 0 ? 'pointer' : 'default';
+                }
             }
         });
+
+        // Chart refresh functionality
+        function refreshCharts() {
+            vendorChart.update('active');
+            vendorPieChart.update('active');
+            weddingChart.update('active');
+        }
+
+        // Add chart interaction events
+        document.getElementById('vendorChart').onclick = (evt) => {
+            const points = vendorChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+            if (points.length) {
+                const firstPoint = points[0];
+                const label = vendorChart.data.labels[firstPoint.index];
+                const value = vendorChart.data.datasets[firstPoint.datasetIndex].data[firstPoint.index];
+                alert(`${label}: ${value} vendors\nClick to view detailed vendor list for this category.`);
+            }
+        };
+
+        // Add loading animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.shadow-lg');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 150);
+            });
+        });
+
+        // Print/Export functionality
+        window.exportChart = function(chartId) {
+            const chart = Chart.getChart(chartId);
+            const url = chart.toBase64Image('image/png', 1);
+            const link = document.createElement('a');
+            link.download = `${chartId}-chart.png`;
+            link.href = url;
+            link.click();
+        };
     </script>
 }

@@ -2,45 +2,585 @@
 
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Vendor List";
+    ViewData["Title"] = "Vendor Management";
 }
 
-<h2 class="text-2xl font-semibold mb-4">Vendor List</h2>
-<div class="d-flex justify-content-between mb-3">
-    <h4>Vendor List</h4>
-    <a href="@Url.Action("VendorAdd", "Vendor")" class="btn btn-primary">+ Add New Vendor</a>
+<!-- Add custom styles for better UX -->
+<style>
+    .vendor-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        border-radius: 15px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .vendor-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.3;
+    }
+    
+    .vendor-header-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .search-filter-section {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .search-box {
+        position: relative;
+        max-width: 500px;
+    }
+    
+    .search-box input {
+        padding: 1rem 1rem 1rem 3rem;
+        border-radius: 25px;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+        width: 100%;
+    }
+    
+    .search-box input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        outline: none;
+    }
+    
+    .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        font-size: 1.2rem;
+    }
+    
+    .filter-select {
+        padding: 0.75rem 1rem;
+        border-radius: 20px;
+        border: 2px solid #e9ecef;
+        background: white;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+    
+    .filter-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        outline: none;
+    }
+    
+    .vendor-table-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+    
+    .vendor-table {
+        margin-bottom: 0;
+    }
+    
+    .vendor-table th {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: none;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        padding: 1.5rem 1rem;
+        color: #495057;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    
+    .vendor-table td {
+        border: none;
+        padding: 1.25rem 1rem;
+        vertical-align: middle;
+        font-size: 0.95rem;
+    }
+    
+    .vendor-table tbody tr {
+        border-bottom: 1px solid #f1f3f4;
+        transition: all 0.3s ease;
+    }
+    
+    .vendor-table tbody tr:hover {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 20%);
+        transform: scale(1.005);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .vendor-id-badge {
+       
+        color: black;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        display: inline-block;
+        min-width: 50px;
+        text-align: center;
+    }
+    
+    .vendor-name {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 1.1rem;
+    }
+    
+    
+    
+    .vendor-contact {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+    
+    .vendor-description {
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #495057;
+    }
+    
+    .btn-action {
+        padding: 0.6rem 1.2rem;
+        
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        margin: 0 0.25rem;
+        display: inline-block;
+    }
+    
+    .btn-images {
+        
+        background-color: #e0f7fa; /* Light teal */
+    color: #2c3e50; /* Dark slate gray */
+    }
+    
+    .btn-images:hover {
+        transform: translateY(-2px);
+       
+        color: #2c3e50;
+    }
+    
+    .btn-edit {
+      background-color: #ffccbc; /* Soft orange */
+    color: #d84315; /* Deep orange */
+    }
+    
+    .btn-edit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(252, 182, 159, 0.4);
+        color: #d84315;
+    }
+    
+    .btn-delete {
+      background-color: #ffcdd2; /* Light red */
+    color: #c62828; /* Bold red */
+    }
+    
+    .btn-delete:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 175, 189, 0.4);
+        color: #c62828;
+    }
+    
+    .btn-add-new {
+        background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        padding: 1rem 2.5rem;
+        border-radius: 25px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        color: white;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .btn-add-new:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        color: white;
+    }
+    
+    .stats-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stats-card {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stats-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+    
+    .stats-card-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .stats-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stats-label {
+        font-size: 1rem;
+        opacity: 0.9;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #6c757d;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+    
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        color: #dee2e6;
+    }
+    
+    .empty-state h3 {
+        color: #495057;
+        margin-bottom: 1rem;
+    }
+    
+    .pagination-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        margin-top: 2rem;
+        text-align: center;
+    }
+    
+    .table-responsive {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+    
+    .loading-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+
+</style>
+
+<div class="container-fluid px-4">
+    <!-- Header Section -->
+    <div class="vendor-header fade-in">
+        <div class="vendor-header-content text-center">
+            <h1 class="display-4 mb-3">
+                <i class="fas fa-store me-3"></i>
+                Vendor Management
+            </h1>
+            <p class="lead mb-0">Manage your wedding vendors with ease and style</p>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-cards slide-up">
+        <div class="stats-card">
+            <div class="stats-card-content">
+                <div class="stats-number" id="totalVendors">@Model.Count</div>
+                <div class="stats-label">Total Vendors</div>
+            </div>
+        </div>
+        <div class="stats-card" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+            <div class="stats-card-content">
+                <div class="stats-number" id="activeCategories">@Model.GroupBy(v => v.VendorCategory?.Name).Count()</div>
+                <div class="stats-label">Categories</div>
+            </div>
+        </div>
+        <div class="stats-card" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);">
+            <div class="stats-card-content">
+                <div class="stats-number" id="recentlyAdded">@Model.Count(v => v.Id > Model.Count - 5)</div>
+                <div class="stats-label">Recently Added</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="search-filter-section slide-up">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-3 mb-lg-0">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search vendors by name, email, or category...">
+                </div>
+            </div>
+            <div class="col-lg-3 mb-3 mb-lg-0">
+                <select id="categoryFilter" class="filter-select w-100">
+                    <option value="">All Categories</option>
+                    @foreach (var category in Model.Select(v => v.VendorCategory?.Name).Distinct().Where(c => !string.IsNullOrEmpty(c)))
+                    {
+                        <option value="@category">@category</option>
+                    }
+                </select>
+            </div>
+            <div class="col-lg-3 text-end">
+                <a href="@Url.Action("VendorAdd", "Vendor")" class="btn-add-new">
+                    <i class="fas fa-plus"></i>
+                    Add New Vendor
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vendor Table -->
+    @if (Model.Any())
+    {
+        <div class="vendor-table-container slide-up">
+            <div class="table-responsive">
+                <table class="table vendor-table" id="vendorTable">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-hashtag me-2"></i>ID</th>
+                            <th><i class="fas fa-user me-2"></i>Name</th>
+                            <th><i class="fas fa-tags me-2"></i>Category</th>
+                            <th><i class="fas fa-envelope me-2"></i>Contact</th>
+                            <th><i class="fas fa-map-marker-alt me-2"></i>Address</th>
+                            <th><i class="fas fa-info-circle me-2"></i>Description</th>
+                            <th><i class="fas fa-cog me-2"></i>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vendorTableBody">
+                        @foreach (var vendor in Model)
+                        {
+                            <tr class="vendor-row" data-vendor-name="@vendor.Name.ToLower()" 
+                                data-vendor-email="@vendor.Email?.ToLower()" 
+                                data-vendor-category="@vendor.VendorCategory?.Name?.ToLower()">
+                                <td>
+                                    <span class="vendor-id-badge">@vendor.Id</span>
+                                </td>
+                                <td>
+                                    <div class="vendor-name">@vendor.Name</div>
+                                </td>
+                                <td>
+                                    <span class="vendor-category">@(vendor.VendorCategory?.Name ?? "Uncategorized")</span>
+                                </td>
+                                <td>
+                                    <div class="vendor-contact">
+                                        <div><i class="fas fa-envelope me-1"></i>@vendor.Email</div>
+                                        <div><i class="fas fa-phone me-1"></i>@vendor.Phone</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="vendor-contact">@vendor.Address</div>
+                                </td>
+                                <td>
+                                    <div class="vendor-description" title="@vendor.Description">
+                                        @vendor.Description
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <a asp-route-vendorId="@vendor.Id" asp-controller="VendorImages" asp-action="Index" 
+                                           class="btn-action btn-images" title="Manage Images">
+                                            <i class="fas fa-images me-1"></i>Images
+                                        </a>
+                                        <a asp-action="EditVendor" asp-route-id="@vendor.Id" 
+                                           class="btn-action btn-edit" title="Edit Vendor">
+                                            <i class="fas fa-edit me-1"></i>Edit
+                                        </a>
+                                        <a asp-action="DeleteVendor" asp-route-id="@vendor.Id" 
+                                           class="btn-action btn-delete" 
+                                           onclick="return confirmDelete('@vendor.Name')" title="Delete Vendor">
+                                            <i class="fas fa-trash me-1"></i>Delete
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state slide-up">
+            <div class="empty-state-icon">
+                <i class="fas fa-store-slash"></i>
+            </div>
+            <h3>No Vendors Found</h3>
+            <p class="mb-4">Get started by adding your first vendor to the system.</p>
+            <a href="@Url.Action("VendorAdd", "Vendor")" class="btn-add-new">
+                <i class="fas fa-plus"></i>
+                Add Your First Vendor
+            </a>
+        </div>
+    }
+
+    <!-- Results Info -->
+    <div class="pagination-container slide-up" id="resultsInfo" style="display: none;">
+        <p class="mb-0">
+            <span id="resultsText"></span>
+        </p>
+    </div>
 </div>
 
-<table class="table table-bordered table-striped w-full">
-    <thead class="bg-gray-200">
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Address</th>
-            <th>Description</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var vendor in Model)
-        {
-            <tr>
-                <td>@vendor.Id</td>
-                <td>@vendor.Name</td>
-                <td>@vendor.VendorCategory?.Name</td>
-                <td>@vendor.Email</td>
-                <td>@vendor.Phone</td>
-                <td>@vendor.Address</td>
-                <td>@vendor.Description</td>
-                <td>
-                    <a asp-route-vendorId="@vendor.Id" asp-controller="VendorImages" asp-action="Index" class="btn btn-sm btn-primary">Image List</a>
-                    <a asp-action="EditVendor" asp-route-id="@vendor.Id" class="btn btn-sm btn-warning">Edit</a>
-                    <a asp-action="DeleteVendor" asp-route-id="@vendor.Id" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this vendor?');">Delete</a>
-                </td>
-            </tr>
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const vendorRows = document.querySelectorAll('.vendor-row');
+        const resultsInfo = document.getElementById('resultsInfo');
+        const resultsText = document.getElementById('resultsText');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        // Search and filter functionality
+        function filterVendors() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedCategory = categoryFilter.value.toLowerCase();
+            let visibleCount = 0;
+
+            vendorRows.forEach(row => {
+                const name = row.dataset.vendorName || '';
+                const email = row.dataset.vendorEmail || '';
+                const category = row.dataset.vendorCategory || '';
+
+                const matchesSearch = name.includes(searchTerm) || 
+                                    email.includes(searchTerm);
+                const matchesCategory = !selectedCategory || category.includes(selectedCategory);
+
+                if (matchesSearch && matchesCategory) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Update results info
+            if (searchTerm || selectedCategory) {
+                resultsInfo.style.display = 'block';
+                resultsText.textContent = `Showing ${visibleCount} of ${vendorRows.length} vendors`;
+            } else {
+                resultsInfo.style.display = 'none';
+            }
         }
-    </tbody>
-</table>
+
+        // Add event listeners
+        searchInput.addEventListener('input', filterVendors);
+        categoryFilter.addEventListener('change', filterVendors);
+
+        // Animate stats on load
+        function animateStats() {
+            const statNumbers = document.querySelectorAll('.stats-number');
+            statNumbers.forEach(stat => {
+                const finalValue = parseInt(stat.textContent);
+                let currentValue = 0;
+                const increment = Math.ceil(finalValue / 50);
+                
+                const timer = setInterval(() => {
+                    currentValue += increment;
+                    if (currentValue >= finalValue) {
+                        currentValue = finalValue;
+                        clearInterval(timer);
+                    }
+                    stat.textContent = currentValue;
+                }, 30);
+            });
+        }
+
+        // Initialize animations
+        setTimeout(animateStats, 500);
+
+        // Add staggered animation to table rows
+        const rows = document.querySelectorAll('.vendor-row');
+        rows.forEach((row, index) => {
+            row.style.animationDelay = `${index * 0.05}s`;
+            row.classList.add('slide-up');
+        });
+    });
+
+    // Enhanced delete confirmation
+    function confirmDelete(vendorName) {
+        return confirm(`Are you absolutely sure you want to delete "${vendorName}"?\n\nThis action cannot be undone and will remove all associated data.`);
+    }
+
+    // Show loading overlay for form submissions
+    document.querySelectorAll('a[href*="Delete"], a[href*="Edit"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            if (this.href.includes('Delete') && !confirmDelete(this.closest('tr').querySelector('.vendor-name').textContent)) {
+                e.preventDefault();
+                return;
+            }
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        });
+    });
+</script>

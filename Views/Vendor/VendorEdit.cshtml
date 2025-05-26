@@ -1,54 +1,212 @@
 ﻿@model DreamDay.Models.Vendor
-
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "Edit Vendor";
 }
 
-<h2 class="text-2xl font-semibold mb-4">Edit Vendor</h2>
-
-<form asp-action="EditVendor" method="post">
-    <input type="hidden" asp-for="Id" />
-
-    <div class="form-group mb-3">
-        <label asp-for="Name" class="form-label">Name</label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+<div class="container-fluid px-4 py-6">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 text-gray-800">Edit Vendor</h1>
+            <p class="text-muted">Update vendor information and contact details</p>
+        </div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Dashboard</a></li>
+                <li class="breadcrumb-item"><a asp-action="VendorList" class="text-decoration-none">Vendors</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Edit</li>
+            </ol>
+        </nav>
     </div>
 
-    <div class="form-group mb-3">
-        <label asp-for="VendorCategoryId" class="form-label">Vendor Category</label>
-        <select asp-for="VendorCategoryId" asp-items="ViewBag.VendorCategories" class="form-control">
-            <option value="">-- Select Category --</option>
-        </select>
-        <span asp-validation-for="VendorCategoryId" class="text-danger"></span>
+    <!-- Main Form Card -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-bottom-0 py-3">
+                    <h5 class="card-title mb-0 text-primary">
+                        <i class="fas fa-edit me-2"></i>Vendor Information
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="EditVendor" method="post" id="vendorForm" novalidate>
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="row">
+                            <!-- Basic Information Section -->
+                            <div class="col-md-6">
+                                <h6 class="text-muted mb-3 fw-bold">
+                                    <i class="fas fa-info-circle me-2"></i>Basic Information
+                                </h6>
+                                
+                                <div class="mb-3">
+                                    <label asp-for="Name" class="form-label fw-semibold">
+                                        Vendor Name <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0">
+                                            <i class="fas fa-building text-muted"></i>
+                                        </span>
+                                        <input asp-for="Name" class="form-control border-start-0 ps-0" 
+                                               placeholder="Enter vendor name" />
+                                    </div>
+                                    <span asp-validation-for="Name" class="text-danger small"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="VendorCategoryId" class="form-label fw-semibold">
+                                        Category <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0">
+                                            <i class="fas fa-tags text-muted"></i>
+                                        </span>
+                                        <select asp-for="VendorCategoryId" asp-items="ViewBag.VendorCategories" 
+                                                class="form-select border-start-0">
+                                            <option value="">-- Select a Category --</option>
+                                        </select>
+                                    </div>
+                                    <span asp-validation-for="VendorCategoryId" class="text-danger small"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Description" class="form-label fw-semibold">Description</label>
+                                    <textarea asp-for="Description" class="form-control" rows="4" 
+                                              placeholder="Brief description of the vendor's services..."></textarea>
+                                    <span asp-validation-for="Description" class="text-danger small"></span>
+                                    <div class="form-text">Optional: Describe what this vendor provides</div>
+                                </div>
+                            </div>
+
+                            <!-- Contact Information Section -->
+                            <div class="col-md-6">
+                                <h6 class="text-muted mb-3 fw-bold">
+                                    <i class="fas fa-address-book me-2"></i>Contact Information
+                                </h6>
+                                
+                                <div class="mb-3">
+                                    <label asp-for="Email" class="form-label fw-semibold">Email Address</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0">
+                                            <i class="fas fa-envelope text-muted"></i>
+                                        </span>
+                                        <input asp-for="Email" type="email" class="form-control border-start-0 ps-0"
+                                               placeholder="vendor@example.com" />
+                                    </div>
+                                    <span asp-validation-for="Email" class="text-danger small"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Phone" class="form-label fw-semibold">Phone Number</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0">
+                                            <i class="fas fa-phone text-muted"></i>
+                                        </span>
+                                        <input asp-for="Phone" type="tel" class="form-control border-start-0 ps-0"
+                                               placeholder="(555) 123-4567" />
+                                    </div>
+                                    <span asp-validation-for="Phone" class="text-danger small"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Address" class="form-label fw-semibold">Address</label>
+                                    <textarea asp-for="Address" class="form-control" rows="4"
+                                              placeholder="Enter full address including city, state, and ZIP code"></textarea>
+                                    <span asp-validation-for="Address" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <hr class="my-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="text-muted small">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Fields marked with <span class="text-danger">*</span> are required
+                            </div>
+                            <div class="btn-group">
+                                <a asp-action="VendorList" class="btn btn-outline-secondary me-2">
+                                    <i class="fas fa-times me-2"></i>Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary" style="background-color: #830823; border-color: #830823;" 
+                                        id="submitBtn">
+                                    <i class="fas fa-save me-2"></i>Update Vendor
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-
-    <div class="form-group mb-3">
-        <label asp-for="Email" class="form-label">Email</label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+<!-- Success/Error Toast (Optional) -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert">
+        <div class="d-flex">
+            <div class="toast-body">
+                <i class="fas fa-check-circle me-2"></i>Vendor updated successfully!
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
     </div>
+</div>
 
-    <div class="form-group mb-3">
-        <label asp-for="Phone" class="form-label">Phone</label>
-        <input asp-for="Phone" class="form-control" />
-        <span asp-validation-for="Phone" class="text-danger"></span>
-    </div>
+<style>
+    .card {
+        border-radius: 12px;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 0.2rem rgba(131, 8, 35, 0.25);
+        border-color: #830823;
+    }
+    
+    .input-group-text {
+        border-color: #dee2e6;
+    }
+    
+    .form-control.border-start-0:focus {
+        border-left: 1px solid #830823;
+    }
+    
+    .btn-primary:hover {
+        background-color: #6d0620;
+        border-color: #6d0620;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: ">";
+    }
+</style>
 
-    <div class="form-group mb-3">
-        <label asp-for="Address" class="form-label">Address</label>
-        <textarea asp-for="Address" class="form-control"></textarea>
-        <span asp-validation-for="Address" class="text-danger"></span>
-    </div>
+<script>
+    // Form validation enhancement
+    document.getElementById('vendorForm').addEventListener('submit', function(e) {
+        const submitBtn = document.getElementById('submitBtn');
+        const originalText = submitBtn.innerHTML;
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Updating...';
+        
+        // Re-enable after 3 seconds (in case of error)
+        setTimeout(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }, 3000);
+    });
 
-    <div class="form-group mb-4">
-        <label asp-for="Description" class="form-label">Description</label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary bg-[#830823] text-white">Update Vendor</button>
-    <a asp-action="VendorList" class="btn btn-secondary">Cancel</a>
-</form>
+    // Auto-format phone number
+    document.querySelector('input[name="Phone"]').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 6) {
+            value = value.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+        } else if (value.length >= 3) {
+            value = value.replace(/(\d{3})(\d{0,3})/, '($1) $2');
+        }
+        e.target.value = value;
+    });
+</script>

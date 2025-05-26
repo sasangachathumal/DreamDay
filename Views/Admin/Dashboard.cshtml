@@ -3,48 +3,246 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<h1 class="mb-4">Admin Dashboard</h1>
+<div class="container-fluid py-4">
+    <!-- Welcome Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2 mb-0 text-primary">
+                <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard
+            </h1>
+            <p class="text-muted mb-0">Welcome back! Here's what's happening with DreamDay today.</p>
+        </div>
+        <div class="text-muted">
+            <small><i class="fas fa-clock me-1"></i>Last updated: @DateTime.Now.ToString("MMM dd, yyyy HH:mm")</small>
+        </div>
+    </div>
 
-<div class="row g-4">
-    <div class="col-md-3">
-        <div class="card bg-light p-3 text-center shadow-sm">
-            <h4>Total Vendors</h4>
-            <p class="fw-bold display-6">@ViewBag.TotalVendors</p>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card bg-light p-3 text-center shadow-sm">
-            <h4>Total Users</h4>
-            <p class="fw-bold display-6">@ViewBag.TotalUsers</p>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card bg-light p-3 text-center shadow-sm">
-            <h4>Total Planners</h4>
-            <p class="fw-bold display-6">@ViewBag.TotalPlanners</p>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card bg-light p-3 text-center shadow-sm">
-            <h4>Completed Weddings</h4>
-            <p class="fw-bold display-6">23</p>
-        </div>
-    </div>
-</div>
-
-<h3 class="mt-5">Top Vendors</h3>
-<div class="row mt-3">
-    @foreach (var vendor in ViewBag.TopVendors as List<DreamDay.Models.Vendor>)
-    {
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">@vendor.Name</h5>
-                    <p class="card-text">@vendor.Email</p>
-                    <p class="card-text text-muted">@vendor.Phone</p>
-                    <p class="card-text">@vendor.Description</p>
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100 stats-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-primary bg-gradient rounded-circle p-3 text-white">
+                                <i class="fas fa-store fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="text-muted mb-1 small text-uppercase">Total Vendors</h6>
+                            <h2 class="mb-0 fw-bold text-primary">@ViewBag.TotalVendors</h2>
+                            <small class="text-success">
+                                <i class="fas fa-arrow-up me-1"></i>Active Partners
+                            </small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    }
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100 stats-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-success bg-gradient rounded-circle p-3 text-white">
+                                <i class="fas fa-users fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="text-muted mb-1 small text-uppercase">Total Users</h6>
+                            <h2 class="mb-0 fw-bold text-success">@ViewBag.TotalUsers</h2>
+                            <small class="text-success">
+                                <i class="fas fa-arrow-up me-1"></i>Registered Couples
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100 stats-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-info bg-gradient rounded-circle p-3 text-white">
+                                <i class="fas fa-calendar-check fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="text-muted mb-1 small text-uppercase">Wedding Planners</h6>
+                            <h2 class="mb-0 fw-bold text-info">@ViewBag.TotalPlanners</h2>
+                            <small class="text-info">
+                                <i class="fas fa-star me-1"></i>Expert Planners
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm h-100 stats-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-warning bg-gradient rounded-circle p-3 text-white">
+                                <i class="fas fa-heart fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="text-muted mb-1 small text-uppercase">Total Weddings</h6>
+                            <h2 class="mb-0 fw-bold text-warning">@ViewBag.TotalWeddings</h2>
+                            <small class="text-warning">
+                                <i class="fas fa-sparkles me-1"></i>Dream Events
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Vendors Section -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-0 py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0 text-dark">
+                    <i class="fas fa-trophy text-warning me-2"></i>Top Performing Vendors
+                </h4>
+                <a href="#" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-eye me-1"></i>View All
+                </a>
+            </div>
+            <p class="text-muted mb-0 mt-1">Our most popular vendors based on package offerings</p>
+        </div>
+        <div class="card-body p-4">
+            @if (ViewBag.TopVendors != null && ((List<DreamDay.Models.Vendor>)ViewBag.TopVendors).Any())
+            {
+                <div class="row g-4">
+                    @foreach (var vendor in ViewBag.TopVendors as List<DreamDay.Models.Vendor>)
+                    {
+                        <div class="col-lg-4 col-md-6">
+                            <div class="card h-100 border-0 shadow-sm vendor-card">
+                                <div class="card-body p-4">
+                                    <div class="d-flex align-items-start justify-content-between mb-3">
+                                        <div class="vendor-avatar bg-primary bg-gradient rounded-circle d-flex align-items-center justify-content-center text-white fw-bold">
+                                            @vendor.Name.Substring(0, 1).ToUpper()
+                                        </div>
+                                        <span class="badge bg-success">Top Vendor</span>
+                                    </div>
+                                    
+                                    <h5 class="card-title mb-2 text-dark">@vendor.Name</h5>
+                                    
+                                    <div class="mb-3">
+                                        <p class="card-text text-muted mb-2">
+                                            <i class="fas fa-envelope me-2"></i>@vendor.Email
+                                        </p>
+                                        <p class="card-text text-muted mb-2">
+                                            <i class="fas fa-phone me-2"></i>@vendor.Phone
+                                        </p>
+                                    </div>
+                                    
+                                    <p class="card-text small text-secondary mb-3">
+                                        @if (!string.IsNullOrEmpty(vendor.Description))
+                                        {
+                                            @(vendor.Description.Length > 100 ? vendor.Description.Substring(0, 100) + "..." : vendor.Description)
+                                        }
+                                        else
+                                        {
+                                            <em>No description available</em>
+                                        }
+                                    </p>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center mt-auto">
+                                        <span class="badge bg-light text-dark">
+                                            <i class="fas fa-box me-1"></i>
+                                            @(vendor.VendorPackages?.Count ?? 0) Packages
+                                        </span>
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-primary" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-outline-secondary" title="Contact">
+                                                <i class="fas fa-envelope"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-store fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No vendors found</h5>
+                    <p class="text-muted">Start by adding some vendors to see them here.</p>
+                    <a href="#" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i>Add Vendor
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
 </div>
+
+<style>
+.stats-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.stats-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.vendor-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.vendor-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.vendor-avatar {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+}
+
+.card-header {
+    border-bottom: 1px solid #e9ecef !important;
+}
+
+.bg-gradient {
+    background: linear-gradient(135deg, var(--bs-primary), var(--bs-primary-dark)) !important;
+}
+
+.bg-success.bg-gradient {
+    background: linear-gradient(135deg, var(--bs-success), #157347) !important;
+}
+
+.bg-info.bg-gradient {
+    background: linear-gradient(135deg, var(--bs-info), #087990) !important;
+}
+
+.bg-warning.bg-gradient {
+    background: linear-gradient(135deg, var(--bs-warning), #b45309) !important;
+}
+
+.small {
+    font-size: 0.875rem;
+}
+
+
+    
+    .card-body {
+        padding: 1.5rem !important;
+    }
+}
+</style>

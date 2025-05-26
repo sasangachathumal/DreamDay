@@ -5,56 +5,565 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Vendor Review</h1>
-
-<table class="table table-bordered table-striped w-full">
-    <thead class="bg-gray-20">
-        <tr>
-
-            <th>
-                @Html.DisplayNameFor(model => model.Vendor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Message)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Rating)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.date)
-            </th>
+<style>
+    .reviews-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        border-radius: 15px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .reviews-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.3;
+    }
+    
+    .reviews-header-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .search-filter-section {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .search-box {
+        position: relative;
+        max-width: 500px;
+    }
+    
+    .search-box input {
+        padding: 1rem 1rem 1rem 3rem;
+        border-radius: 25px;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+        width: 100%;
+    }
+    
+    .search-box input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        outline: none;
+    }
+    
+    .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+        font-size: 1.2rem;
+    }
+    
+    .filter-select {
+        padding: 0.75rem 1rem;
+        border-radius: 20px;
+        border: 2px solid #e9ecef;
+        background: white;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+    
+    .filter-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        outline: none;
+    }
+    
+    .reviews-table-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+    
+    .reviews-table {
+        margin-bottom: 0;
+    }
+    
+    .reviews-table th {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: none;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        padding: 1.5rem 1rem;
+        color: #495057;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    
+    .reviews-table td {
+        border: none;
+        padding: 1.25rem 1rem;
+        vertical-align: middle;
+        font-size: 0.95rem;
+    }
+    
+    .reviews-table tbody tr {
+        border-bottom: 1px solid #f1f3f4;
+        transition: all 0.3s ease;
+    }
+    
+    .reviews-table tbody tr:hover {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 20%);
+        transform: scale(1.005);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .vendor-name {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 1rem;
+    }
+    
+    .user-name {
+        color: #6c757d;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+    
+    .review-message {
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #495057;
+        font-style: italic;
+        position: relative;
+    }
+    
+    .review-message:hover {
+        white-space: normal;
+        cursor: pointer;
+    }
+    
+    .rating-stars {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+    
+    .star {
+        color: #ffc107;
+        font-size: 1.1rem;
+    }
+    
+    .star.empty {
+        color: #e9ecef;
+    }
+    
+    .rating-number {
+        margin-left: 0.5rem;
+        font-weight: 600;
+        color: #495057;
+        font-size: 0.9rem;
+    }
+    
+    .date-badge {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        color: #1565c0;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        display: inline-block;
+    }
+    
+    .btn-action {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        margin: 0 0.25rem;
+        display: inline-block;
+        border-radius: 8px;
+    }
+    
+    .btn-details {
+        background-color: #e8f5e8;
+        color: #2e7d32;
+    }
+    
+    .btn-details:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(232, 245, 232, 0.6);
+        color: #2e7d32;
+    }
+    
+    .btn-delete {
+        background-color: #ffebee;
+        color: #c62828;
+    }
+    
+    .btn-delete:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 235, 238, 0.6);
+        color: #c62828;
+    }
+    
+    .stats-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stats-card {
+        color: white;
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stats-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+    
+    .stats-card-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .stats-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stats-label {
+        font-size: 1rem;
+        opacity: 0.9;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #6c757d;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+    
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        color: #dee2e6;
+    }
+    
+    .empty-state h3 {
+        color: #495057;
+        margin-bottom: 1rem;
+    }
+    
+    .table-responsive {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+    
+    .vendor-avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-right: 0.75rem;
+    }
+    
+    .user-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 0.8rem;
+        margin-right: 0.5rem;
+    }
+    
+    .vendor-info, .user-info {
+        display: flex;
+        align-items: center;
+    }
+  
         
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Vendor.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.User.FirstName)
-                </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Message)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rating)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.date)
-            </td>
+        .btn-action {
+            display: block;
+            margin: 0.25rem 0;
+            text-align: center;
+        }
+        
+        .review-message {
+            max-width: 150px;
+        }
+    }
+</style>
 
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info text-white me-1">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this?');">Delete</a>
-                </td>
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="reviews-header">
+        <div class="reviews-header-content text-center">
+            <h1 class="display-4 mb-3">
+                <i class="fas fa-star me-3"></i>
+                Vendor Reviews Management
+            </h1>
+            <p class="lead mb-0">Monitor and manage customer feedback for all vendors</p>
+        </div>
+    </div>
 
-        </tr>
-}
-    </tbody>
-</table>
+    <!-- Statistics Cards -->
+    <div class="stats-cards">
+        <div class="stats-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <div class="stats-card-content">
+                <div class="stats-number">@Model.Count()</div>
+                <div class="stats-label">Total Reviews</div>
+            </div>
+        </div>
+        <div class="stats-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+            <div class="stats-card-content">
+                <div class="stats-number">@(Model.Any() ? Model.Average(r => r.Rating).ToString("F1") : "0.0")</div>
+                <div class="stats-label">Average Rating</div>
+            </div>
+        </div>
+        <div class="stats-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+            <div class="stats-card-content">
+                <div class="stats-number">@Model.Count(r => r.Rating >= 4)</div>
+                <div class="stats-label">High Ratings (4+)</div>
+            </div>
+        </div>
+        <div class="stats-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+            <div class="stats-card-content">
+                <div class="stats-number">@Model.GroupBy(r => r.Vendor?.Name).Count()</div>
+                <div class="stats-label">Reviewed Vendors</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="search-filter-section">
+        <div class="row align-items-end">
+            <div class="col-md-5">
+                <label class="form-label fw-bold">Search Reviews</label>
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search by vendor, user, or message...">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-bold">Filter by Rating</label>
+                <select id="ratingFilter" class="form-select filter-select">
+                    <option value="">All Ratings</option>
+                    <option value="5">5 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="2">2 Stars</option>
+                    <option value="1">1 Star</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Sort by Date</label>
+                <select id="dateSort" class="form-select filter-select">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reviews Table -->
+    @if (Model.Any())
+    {
+        <div class="reviews-table-container">
+            <div class="table-responsive">
+                <table class="table reviews-table">
+                    <thead>
+                        <tr>
+                            <th>Vendor</th>
+                            <th>Customer</th>
+                            <th>Review Message</th>
+                            <th>Rating</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reviewsTableBody">
+                        @foreach (var item in Model)
+                        {
+                            <tr data-rating="@item.Rating" data-date="@item.date.ToString("yyyy-MM-dd")">
+                                <td>
+                                    <div class="vendor-info">
+                                        <div class="vendor-avatar">
+                                            @(item.Vendor?.Name?.Substring(0, 1).ToUpper() ?? "V")
+                                        </div>
+                                        <div class="vendor-name">@Html.DisplayFor(modelItem => item.Vendor.Name)</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="user-info">
+                                        <div class="user-avatar">
+                                            @(item.User?.FirstName?.Substring(0, 1).ToUpper() ?? "U")
+                                        </div>
+                                        <div class="user-name">@Html.DisplayFor(modelItem => item.User.FirstName)</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="review-message" title="@item.Message">
+                                        @Html.DisplayFor(modelItem => item.Message)
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="rating-stars">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <i class="fas fa-star star @(i <= item.Rating ? "" : "empty")"></i>
+                                        }
+                                        <span class="rating-number">(@item.Rating/5)</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="date-badge">
+                                        <i class="fas fa-calendar-alt me-1"></i>
+                                        @item.date.ToString("MMM dd, yyyy")
+                                    </span>
+                                </td>
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@item.Id" 
+                                       class="btn-action btn-details" title="View Details">
+                                        <i class="fas fa-eye me-1"></i>Details
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" 
+                                       class="btn-action btn-delete" title="Delete Review"
+                                       onclick="return confirm('Are you sure you want to delete this review? This action cannot be undone.');">
+                                        <i class="fas fa-trash me-1"></i>Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fas fa-star"></i>
+            </div>
+            <h3>No Reviews Found</h3>
+            <p>There are no vendor reviews in the system yet. Reviews will appear here once customers start rating vendors.</p>
+        </div>
+    }
+</div>
+
+<script>
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const tableRows = document.querySelectorAll('#reviewsTableBody tr');
+        
+        tableRows.forEach(row => {
+            const vendorName = row.querySelector('.vendor-name')?.textContent.toLowerCase() || '';
+            const userName = row.querySelector('.user-name')?.textContent.toLowerCase() || '';
+            const message = row.querySelector('.review-message')?.textContent.toLowerCase() || '';
+            
+            if (vendorName.includes(searchTerm) || userName.includes(searchTerm) || message.includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+
+    // Rating filter functionality
+    document.getElementById('ratingFilter').addEventListener('change', function() {
+        const selectedRating = this.value;
+        const tableRows = document.querySelectorAll('#reviewsTableBody tr');
+        
+        tableRows.forEach(row => {
+            const rating = row.getAttribute('data-rating');
+            
+            if (selectedRating === '' || rating === selectedRating) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+
+    // Date sorting functionality
+    document.getElementById('dateSort').addEventListener('change', function() {
+        const sortOrder = this.value;
+        const tbody = document.getElementById('reviewsTableBody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        
+        rows.sort((a, b) => {
+            const dateA = new Date(a.getAttribute('data-date'));
+            const dateB = new Date(b.getAttribute('data-date'));
+            
+            if (sortOrder === 'newest') {
+                return dateB - dateA;
+            } else {
+                return dateA - dateB;
+            }
+        });
+        
+        rows.forEach(row => tbody.appendChild(row));
+    });
+
+    // Tooltip for truncated messages
+    document.querySelectorAll('.review-message').forEach(element => {
+        element.addEventListener('click', function() {
+            const fullText = this.getAttribute('title');
+            if (fullText && fullText.length > this.textContent.length) {
+                alert(fullText);
+            }
+        });
+    });
+
+    // Add smooth animations on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.stats-card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.classList.add('animate__animated', 'animate__fadeInUp');
+        });
+    });
+</script>

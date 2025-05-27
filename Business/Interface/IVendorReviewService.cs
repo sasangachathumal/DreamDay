@@ -9,5 +9,8 @@ namespace DreamDay.Business.Interface
         List<VendorReviews> GeAlltVendorReviews();
         bool AddVendorReview(VendorReviews vendorReview);
         bool DeleteVendorReview(int id);
+        VendorReviews GetVendorReviewById(int id); // change name and return type
+
     }
 }
+

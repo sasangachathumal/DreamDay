@@ -14,8 +14,10 @@ namespace DreamDay.Models
         public required string Name { get; set; }
         public string? Description { get; set; }
         [Required]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits.")]
         public required string Phone { get; set; }
-        [Required]
+          [Required(ErrorMessage = "Email is required.")]
+    [EmailAddress(ErrorMessage = "Enter a valid email address.")]
         public required string Email { get; set; }
         [Required]
         public required string Address { get; set; }
